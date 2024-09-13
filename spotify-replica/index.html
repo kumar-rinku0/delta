@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="./assets/logo.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100..900&display=swap" rel="stylesheet">
+  <title>Spotify - Web Player: Music for everyone</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+  <div id="root" class="Root">
+    <div class="main">
+      <div class="header">
+        <div class="logo">
+          <img src="./assets/logo.png" alt="Spotify" />
+        </div>
+        <div class="search">
+          <button class="home-icon">
+            <img src="./assets/home.svg" alt="home" />
+          </button>
+          <form class="search-form">
+            <div class="search-box">
+              <label for="search-input">
+                <img src="./assets/search-glass.svg" alt="search-img" />
+              </label>
+              <input type="text" name="search-input" id="search-input" placeholder="What do you want to play?" />
+              <button type="button" class="browse-icon-btn" title="browse">
+                <img src="./assets/browse.svg" alt="browse">
+              </button>
+            </div>
+          </form>
+        </div>
+        <div class="login-signup">
+          <button class="default-btn">Sign up</button>
+          <button class="outline-btn">Log in</button>
+        </div>
+      </div>
+      <div class="sidebar">
+        <div class="library">
+          <header class="lib-header">
+            <div>
+              <img src="./assets/library_icon.png" alt="library-pic">
+              <span>Your Library</span>
+            </div>
+            <div class="lib-header-plus-container">
+              <img src="./assets/plus.svg" alt="plus-icon">
+            </div>
+          </header>
+          <div class="sidebar-cards-container">
+            <div class="sidebar-card">
+              <h4 class="font-md mx-3">Create your first playlist</h4>
+              <h5 class="font-sm">It's easy, we'll help you.</h5>
+              <button class="outline-btn font-sm px-2">Create playlist</button>
+            </div>
+            <div class="sidebar-card">
+              <h4 class="font-md mx-3">Let's find some podcasts to follow</h4>
+              <h5 class="font-sm">We'll keep you updated on new episodes</h5>
+              <button class="outline-btn font-sm px-2">Browse podcasts</button>
+            </div>
+          </div>
+        </div>
+        <div class="copiright-container">
+          <div class="copiright">
+            <div>Legal</div>
+            <div>Safety & Privacy Center</div>
+            <div>Privacy Policy</div>
+            <div>Cookies</div>
+            <div>About ads</div>
+            <div>Accessiblity</div>
+          </div>
+          <a href="/">Cookies</a>
+          <div class="language">
+            <img src="./assets/globe-solid.svg" alt="globe-icon" />
+            <span>English</span>
+          </div>
+        </div>
+      </div>
+      <div class="main-content">
+        <div class="inline-content">
+          <div class="content-heading">
+            <span class="inline-content-heading">Recently played</span>
+            <a href="#">Show all</a>
+          </div>
+          <div class="content-cards-container">
+            <div class="content-card">
+              <img src="./assets/card1img.jpeg" alt="card-img" />
+              <h4 class="mx-3 font-md">Top 50 - Global</h4>
+              <p class="m-0 font-sm">content descriptions</p>
+            </div>
+            <div class="content-card">
+              <img src="./assets/card2img.jpeg" alt="card-img" />
+              <h4 class="mx-3 font-md">Mahiye jinna sohna</h4>
+              <p class="m-0 font-sm">Darshan Raval, Youngveer</p>
+            </div>
+          </div>
+        </div>
+        <div class="inline-content">
+          <div class="content-heading">
+            <span class="inline-content-heading">Popular albums</span>
+            <a href="#">Show all</a>
+          </div>
+          <div class="content-cards-container">
+            <div class="content-card">
+              <img src="./assets/card3img.jpeg" alt="card-img" />
+              <h4 class="mx-3 font-md">Top 50 - Global</h4>
+              <p class="m-0 font-sm">content descriptions</p>
+            </div>
+            <div class="content-card">
+              <img src="./assets/card2img.jpeg" alt="card-img" />
+              <h4 class="mx-3 font-md">Mahiye jinna sohna</h4>
+              <p class="m-0 font-sm">Darshan Raval, Youngveer</p>
+            </div>
+            <div class="content-card">
+              <img src="./assets/card5img.jpeg" alt="card-img" />
+              <h4 class="mx-3 font-md">Top songs - Global</h4>
+              <p class="m-0 font-sm"></p>
+            </div>
+            <div class="content-card">
+              <img src="./assets/card6img.jpeg" alt="card-img" />
+              <h4 class="mx-3 font-md">Top songs - India</h4>
+              <p class="m-0 font-sm">Darshan Raval, Youngveer</p>
+            </div>
+          </div>
+        </div>
+        <div class="inline-content">
+          <div class="content-heading">
+            <span class="inline-content-heading">Featured Charts</span>
+            <a href="#">Show all</a>
+          </div>
+          <div class="content-cards-container">
+            <div class="content-card">
+              <img src="https://charts-images.scdn.co/assets/locale_en/regional/weekly/region_us_default.jpg" alt="card-img" />
+              <h4 class="mx-3 font-md">Top 50 - Global</h4>
+              <p class="m-0 font-sm">content descriptions</p>
+            </div>
+            <div class="content-card">
+              <img src="https://charts-images.scdn.co/assets/locale_en/regional/weekly/region_global_default.jpg" alt="card-img" />
+              <h4 class="mx-3 font-md">Mahiye jinna sohna</h4>
+              <p class="m-0 font-sm">Darshan Raval, Youngveer</p>
+            </div>
+            <div class="content-card">
+              <img src="https://charts-images.scdn.co/assets/locale_en/viral/daily/region_us_default.jpg" alt="card-img" />
+              <h4 class="mx-3 font-md">Mahiye jinna sohna</h4>
+              <p class="m-0 font-sm">Darshan Raval, Youngveer</p>
+            </div>
+            <div class="content-card">
+              <img src="https://charts-images.scdn.co/assets/locale_en/viral/daily/region_global_default.jpg" alt="card-img" />
+              <h4 class="mx-3 font-md">Mahiye jinna sohna</h4>
+              <p class="m-0 font-sm">Darshan Raval, Youngveer</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="playlist hidden">PlayList</div>
+      <div class="music-player">Music Player</div>
+    </div>
+  </div>
+</body>
+
+</html>
