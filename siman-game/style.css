@@ -1,0 +1,46 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  gap: 2rem;
+}
+
+.box {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr, 1fr;
+  justify-content: center;
+  gap: 2rem;
+  width: 25%;
+}
+
+.btn {
+  height: 10rem;
+  width: 10rem;
+  box-shadow: 2px 2px 8px black;
+}
+
+.one {
+  background-color: brown;
+}
+.two {
+  background-color: aquamarine;
+}
+.three {
+  background-color: cornflowerblue;
+}
+.four {
+  background-color: greenyellow;
+}
+
+.flash {
+  box-shadow: none;
+  background-color: white;
+  color: transparent;
+}
+
+.hidden {
+  display: none;
+}
