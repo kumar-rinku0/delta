@@ -49,7 +49,7 @@ app.post("/delete", (req, res) => {
     connection.query(q1, (err, result) => {
       if (err) throw err;
       if (result[0].password.trim() != password.trim()) {
-        res.send("incorrect password");
+        res.render("msg.ejs", { msg: "incorrect password!" });
       } else {
         connection.query(q2, (err, result) => {
           if (err) throw err;
@@ -77,6 +77,10 @@ app.post("/create", (req, res) => {
     console.log("ERROR", error);
     res.status(500).send("server error!!");
   }
+});
+
+app.get("*", (req, res) => {
+  res.render("pagenotfound.ejs");
 });
 
 const PORT = 8000;
