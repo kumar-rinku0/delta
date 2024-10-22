@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Home Route!</title>
+
+  <style>
+    table,
+    td,
+    th {
+      border: 1px solid black;
+    }
+  </style>
+</head>
+
+<body>
+  <h2>Homepage!!</h2>
+  <h4>Students TABLE</h4>
+  <table>
+    <tr>
+      <th>id</th>
+      <th>username</th>
+      <th>password</th>
+      <th>email</th>
+      <th>delete tuple</th>
+    </tr>
+    <% for(stu of res) { %>
+      <tr>
+        <td>
+          <%= stu.id %>
+        </td>
+        <td>
+          <%= stu.usename %>
+        </td>
+        <td>
+          <%= stu.password %>
+        </td>
+        <td>
+          <%= stu.email %>
+        </td>
+        <td>
+          <a href="/delete/<%= stu.id %>"> prune </a>
+        </td>
+      </tr>
+      <% } %>
+  </table>
+  <h4>To add student entry <a href="/create">create</a></h4>
+</body>
+
+</html>
