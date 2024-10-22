@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>delete student</title>
+</head>
+
+<body>
+  <h2>Delete a Student.</h2>
+  <form action="/delete" method="post">
+    <label for="password">confirm password</label>
+    <input type="password" name="password" id="password" placeholder="password">
+    <input type="hidden" name="id" value="<%= id %>">
+    <button type="submit">submit</button>
+  </form>
+</body>
+
+</html>
