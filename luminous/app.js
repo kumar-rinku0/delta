@@ -24,6 +24,12 @@ app.get("/listings", async (req, res) => {
   res.status(200).render("listings.ejs", { listings });
 });
 
+app.get("/listings/:id", async (req, res) => {
+  const { id } = req.params;
+  const listing = await Listing.findById(id);
+  res.status(200).render("listing.ejs", { listing });
+});
+
 app.listen(PORT, () => {
   console.log("app is listening on PORT", PORT);
 });
