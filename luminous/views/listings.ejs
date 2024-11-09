@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Luminuous Listings</title>
+</head>
+
+<body>
+  <h3>
+    Luminious Listings!!
+  </h3>
+  <div>
+    <% for(listing of listings) { %>
+      <div>
+        <a href="/">
+          <%= listing.title %>
+        </a>
+      </div>
+      <% } %>
+  </div>
+</body>
+
+</html>
