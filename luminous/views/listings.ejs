@@ -1,25 +1,17 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Luminuous Listings</title>
-</head>
-
-<body>
-  <h3>
+<%- include("partials/boilerplate", { title }); %>
+  <h3 class="heading">
     Luminious Listings!!
   </h3>
-  <div>
+  <div class="container">
     <% for(listing of listings) { %>
-      <div>
-        <a href="/">
-          <%= listing.title %>
+      <div class="card">
+        <a href="/listings/<%= listing._id %>">
+          <img class="listings-img" src="<%= listing.image %>" alt="image">
+          <div>
+            <%= listing.title %> <br>
+              &#8377; <%= listing.price %>
+          </div>
         </a>
       </div>
       <% } %>
   </div>
-</body>
-
-</html>
