@@ -1,15 +1,5 @@
-<!DOCTYPE html>
-<html lang="en">
+<%- include("partials/boilerplate", { title }); %>
 
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>listing - <%= listing._id %>
-  </title>
-  <link rel="stylesheet" href="/css/style.css">
-</head>
-
-<body>
   <div class="listing-container">
     <img class="listing-img" src="<%= listing.image %>" alt="image">
     <h3 class="listing-heading">
@@ -20,6 +10,3 @@
         &#8377; <%= listing.price %>
     </p>
   </div>
-</body>
-
-</html>

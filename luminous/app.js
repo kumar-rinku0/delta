@@ -4,6 +4,7 @@ const express = require("express");
 const path = require("path");
 const connection = require("./utils/init.js");
 const Listing = require("./models/listing.js");
+const listingRouter = require("./routes/listing.js");
 
 const app = express();
 const PORT = process.env.PORT || 8000;
@@ -16,19 +17,10 @@ app.use(express.urlencoded({ extended: true }));
 connection();
 
 app.get("/", (req, res) => {
-  res.status(200).send("OK!");
+  res.status(200).redirect(`/listings`);
 });
 
-app.get("/listings", async (req, res) => {
-  const listings = await Listing.find({});
-  res.status(200).render("listings.ejs", { listings });
-});
-
-app.get("/listings/:id", async (req, res) => {
-  const { id } = req.params;
-  const listing = await Listing.findById(id);
-  res.status(200).render("listing.ejs", { listing });
-});
+app.use("/listings", listingRouter);
 
 app.listen(PORT, () => {
   console.log("app is listening on PORT", PORT);
