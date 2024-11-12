@@ -7,8 +7,12 @@
     </svg>
   </a>
   <div class="navigation">
-    <a href="/">Home</a>
-    <a href="/listings">Listings</a>
-    <a href="/listings/new">Create New</a>
+    <% if(!user) { %>
+      <a href="/user/signin">Sign IN</a>
+      <% } else { %>
+        <a href="/user/logout">Sign Out</a>
+        <% } %>
+          <a href="/listings">Listings</a>
+          <a href="/listings/new">Create New</a>
   </div>
 </nav>
