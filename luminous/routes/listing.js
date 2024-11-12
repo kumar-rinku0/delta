@@ -30,18 +30,27 @@ route.post(
   "/new",
   wrapAsync(async (req, res) => {
     const { listing } = req.body;
+    const user = sessions[req.headers?.cookie?.split("=")[1]];
     const newListing = new Listing(listing);
+    newListing.createdBy = user.id;
     await newListing.save();
     res.status(200).redirect("/listings");
   })
 );
 
-route.post("/prune/:id", async (req, res) => {
-  const { id } = req.params;
-  const prunedListing = await Listing.findByIdAndDelete(id);
-  console.log(prunedListing);
-  res.status(200).send("listing pruned.");
-});
+route.post(
+  "/prune/:id",
+  wrapAsync(async (req, res) => {
+    const { id } = req.params;
+    const user = sessions[req.headers?.cookie?.split("=")[1]];
+    const listing = await Listing.findById(id);
+    if (user.id.toString() !== listing.createdBy.toString()) {
+      throw new ExpressError(401, "Unauthorized pruning!!");
+    }
+    await Listing.findByIdAndDelete(id);
+    res.status(200).send("listing pruned.");
+  })
+);
 
 route.get(
   "/:id",
@@ -56,13 +65,11 @@ route.get(
       // throw new ExpressError(404, "Listing Not Found!!");  // async fuction can throw errors this only if they are wrapped with async_wrapper.
       next(new ExpressError(404, "Listing not Found!!"));
     }
-    res
-      .status(200)
-      .render("listing.ejs", {
-        listing,
-        user,
-        title: "listing based on title",
-      });
+    res.status(200).render("listing.ejs", {
+      listing,
+      user,
+      title: "listing based on title",
+    });
   })
 );
 

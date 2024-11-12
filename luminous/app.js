@@ -66,7 +66,7 @@ app.use("/user/signin", async (req, res, next) => {
       res.send("Password is Incorrect!!");
     }
     const sessionId = randomUUID();
-    sessions[sessionId] = { username };
+    sessions[sessionId] = { username, id: user._id };
     res.cookie("_session_uuid", sessionId, {
       secure: true,
       httpOnly: true,
@@ -75,6 +75,15 @@ app.use("/user/signin", async (req, res, next) => {
   } catch (err) {
     next(err);
   }
+});
+
+// sign out requist
+app.get("/user/signout", (req, res) => {
+  res.cookie("_session_uuid", null, {
+    secure: true,
+    httpOnly: true,
+  });
+  res.status(200).redirect("/user/signin");
 });
 
 const isLogInUser = (req, res, next) => {
