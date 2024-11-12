@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const Listing = require("../models/listing.js");
 const sampleListings = require("./data.js");
+const User = require("../models/user.js");
 const MONGO_URI = process.env.MONGO_URI;
 
 const connection = () => {
@@ -14,8 +15,8 @@ const init = async () => {
   connection();
   const result1 = await Listing.deleteMany({});
   console.log(result1);
-  const result = await Listing.insertMany(sampleListings.data);
-  console.log(result);
+  const result2 = await Listing.insertMany(sampleListings.data);
+  console.log(result2);
 };
 
 // init();

@@ -1,5 +1,6 @@
 const sampleListings = [
   {
+    createdBy: "6733c6abc3475d7df0987197",
     title: "Cozy Beachfront Cottage",
     description:
       "Escape to this charming beachfront cottage for a relaxing getaway. Enjoy stunning ocean views and easy access to the beach.",
@@ -10,6 +11,7 @@ const sampleListings = [
     country: "United States",
   },
   {
+    createdBy: "6733c6abc3475d7df0987197",
     title: "Modern Loft in Downtown",
     description:
       "Stay in the heart of the city in this stylish loft apartment. Perfect for urban explorers!",
@@ -20,6 +22,7 @@ const sampleListings = [
     country: "United States",
   },
   {
+    createdBy: "6733c6abc3475d7df0987197",
     title: "Mountain Retreat",
     description:
       "Unplug and unwind in this peaceful mountain cabin. Surrounded by nature, it's a perfect place to recharge.",
@@ -30,6 +33,7 @@ const sampleListings = [
     country: "United States",
   },
   {
+    createdBy: "6733c6abc3475d7df0987197",
     title: "Historic Villa in Tuscany",
     description:
       "Experience the charm of Tuscany in this beautifully restored villa. Explore the rolling hills and vineyards.",
@@ -40,6 +44,7 @@ const sampleListings = [
     country: "Italy",
   },
   {
+    createdBy: "6733c6abc3475d7df0987197",
     title: "Secluded Treehouse Getaway",
     description:
       "Live among the treetops in this unique treehouse retreat. A true nature lover's paradise.",
@@ -50,6 +55,7 @@ const sampleListings = [
     country: "United States",
   },
   {
+    createdBy: "6733c6abc3475d7df0987197",
     title: "Beachfront Paradise",
     description:
       "Step out of your door onto the sandy beach. This beachfront condo offers the ultimate relaxation.",
@@ -60,6 +66,7 @@ const sampleListings = [
     country: "Mexico",
   },
   {
+    createdBy: "6733c6abc3475d7df0987197",
     title: "Rustic Cabin by the Lake",
     description:
       "Spend your days fishing and kayaking on the serene lake. This cozy cabin is perfect for outdoor enthusiasts.",
@@ -70,6 +77,7 @@ const sampleListings = [
     country: "United States",
   },
   {
+    createdBy: "6733c6abc3475d7df0987197",
     title: "Luxury Penthouse with City Views",
     description:
       "Indulge in luxury living with panoramic city views from this stunning penthouse apartment.",
@@ -80,6 +88,7 @@ const sampleListings = [
     country: "United States",
   },
   {
+    createdBy: "6733c6abc3475d7df0987197",
     title: "Ski-In/Ski-Out Chalet",
     description:
       "Hit the slopes right from your doorstep in this ski-in/ski-out chalet in the Swiss Alps.",
@@ -91,6 +100,7 @@ const sampleListings = [
     country: "Switzerland",
   },
   {
+    createdBy: "6733c6abc3475d7df0987197",
     title: "Safari Lodge in the Serengeti",
     description:
       "Experience the thrill of the wild in a comfortable safari lodge. Witness the Great Migration up close.",
@@ -102,6 +112,7 @@ const sampleListings = [
     country: "Tanzania",
   },
   {
+    createdBy: "6733c6abc3475d7df0987197",
     title: "Historic Canal House",
     description:
       "Stay in a piece of history in this beautifully preserved canal house in Amsterdam's iconic district.",
@@ -113,6 +124,7 @@ const sampleListings = [
     country: "Netherlands",
   },
   {
+    createdBy: "6733c6abc3475d7df0987197",
     title: "Private Island Retreat",
     description:
       "Have an entire island to yourself for a truly exclusive and unforgettable vacation experience.",
@@ -124,6 +136,7 @@ const sampleListings = [
     country: "Fiji",
   },
   {
+    createdBy: "6733c6abc3475d7df0987197",
     title: "Charming Cottage in the Cotswolds",
     description:
       "Escape to the picturesque Cotswolds in this quaint and charming cottage with a thatched roof.",
@@ -135,6 +148,7 @@ const sampleListings = [
     country: "United Kingdom",
   },
   {
+    createdBy: "6733c6abc3475d7df0987197",
     title: "Historic Brownstone in Boston",
     description:
       "Step back in time in this elegant historic brownstone located in the heart of Boston.",
@@ -146,6 +160,7 @@ const sampleListings = [
     country: "United States",
   },
   {
+    createdBy: "6733c6abc3475d7df0987197",
     title: "Beachfront Bungalow in Bali",
     description:
       "Relax on the sandy shores of Bali in this beautiful beachfront bungalow with a private pool.",
@@ -157,6 +172,7 @@ const sampleListings = [
     country: "Indonesia",
   },
   {
+    createdBy: "6733c6abc3475d7df0987197",
     title: "Mountain View Cabin in Banff",
     description:
       "Enjoy breathtaking mountain views from this cozy cabin in the Canadian Rockies.",
@@ -168,6 +184,7 @@ const sampleListings = [
     country: "Canada",
   },
   {
+    createdBy: "6733c6abc3475d7df0987197",
     title: "Art Deco Apartment in Miami",
     description:
       "Step into the glamour of the 1920s in this stylish Art Deco apartment in South Beach.",
@@ -179,6 +196,7 @@ const sampleListings = [
     country: "United States",
   },
   {
+    createdBy: "6733c6abc3475d7df0987197",
     title: "Tropical Villa in Phuket",
     description:
       "Escape to a tropical paradise in this luxurious villa with a private infinity pool in Phuket.",
@@ -190,6 +208,7 @@ const sampleListings = [
     country: "Thailand",
   },
   {
+    createdBy: "6733c6abc3475d7df0987197",
     title: "Historic Castle in Scotland",
     description:
       "Live like royalty in this historic castle in the Scottish Highlands. Explore the rugged beauty of the area.",
@@ -201,6 +220,7 @@ const sampleListings = [
     country: "United Kingdom",
   },
   {
+    createdBy: "6733c6abc3475d7df0987197",
     title: "Desert Oasis in Dubai",
     description:
       "Experience luxury in the middle of the desert in this opulent oasis in Dubai with a private pool.",
@@ -212,6 +232,7 @@ const sampleListings = [
     country: "United Arab Emirates",
   },
   {
+    createdBy: "6733c6abc3475d7df0987197",
     title: "Rustic Log Cabin in Montana",
     description:
       "Unplug and unwind in this cozy log cabin surrounded by the natural beauty of Montana.",
@@ -223,6 +244,7 @@ const sampleListings = [
     country: "United States",
   },
   {
+    createdBy: "6733c6abc3475d7df0987197",
     title: "Beachfront Villa in Greece",
     description:
       "Enjoy the crystal-clear waters of the Mediterranean in this beautiful beachfront villa on a Greek island.",
@@ -234,6 +256,7 @@ const sampleListings = [
     country: "Greece",
   },
   {
+    createdBy: "6733c6abc3475d7df0987197",
     title: "Eco-Friendly Treehouse Retreat",
     description:
       "Stay in an eco-friendly treehouse nestled in the forest. It's the perfect escape for nature lovers.",
@@ -245,6 +268,7 @@ const sampleListings = [
     country: "Costa Rica",
   },
   {
+    createdBy: "6733c6abc3475d7df0987197",
     title: "Historic Cottage in Charleston",
     description:
       "Experience the charm of historic Charleston in this beautifully restored cottage with a private garden.",
@@ -256,6 +280,7 @@ const sampleListings = [
     country: "United States",
   },
   {
+    createdBy: "6733c6abc3475d7df0987197",
     title: "Modern Apartment in Tokyo",
     description:
       "Explore the vibrant city of Tokyo from this modern and centrally located apartment.",
@@ -267,6 +292,7 @@ const sampleListings = [
     country: "Japan",
   },
   {
+    createdBy: "6733c6abc3475d7df0987197",
     title: "Lakefront Cabin in New Hampshire",
     description:
       "Spend your days by the lake in this cozy cabin in the scenic White Mountains of New Hampshire.",
@@ -278,6 +304,7 @@ const sampleListings = [
     country: "United States",
   },
   {
+    createdBy: "6733c6abc3475d7df0987197",
     title: "Luxury Villa in the Maldives",
     description:
       "Indulge in luxury in this overwater villa in the Maldives with stunning views of the Indian Ocean.",
@@ -289,6 +316,7 @@ const sampleListings = [
     country: "Maldives",
   },
   {
+    createdBy: "6733c6abc3475d7df0987197",
     title: "Ski Chalet in Aspen",
     description:
       "Hit the slopes in style with this luxurious ski chalet in the world-famous Aspen ski resort.",
@@ -300,6 +328,7 @@ const sampleListings = [
     country: "United States",
   },
   {
+    createdBy: "6733c6abc3475d7df0987197",
     title: "Secluded Beach House in Costa Rica",
     description:
       "Escape to a secluded beach house on the Pacific coast of Costa Rica. Surf, relax, and unwind.",
