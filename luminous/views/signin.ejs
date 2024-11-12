@@ -1,0 +1,19 @@
+<%- include("partials/boilerplate", {title, user}); %>
+  <div class="form-container">
+    <form action="/user/signin" method="post" class="form">
+      <div>
+        <label for="username">Username</label><input type="text" name="username" id="username" placeholder="@username"
+          required>
+      </div>
+      <div>
+        <label for="password"></label>Password<input type="text" name="password" id="password" placeholder="pa*s**d"
+          required>
+      </div>
+      <div>
+        <button type="submit">Sign IN</button>
+      </div>
+    </form>
+    <div>
+      don't have an account? <a href="/user/signup"> sign up </a>
+    </div>
+  </div>
