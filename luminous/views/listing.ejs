@@ -3,13 +3,15 @@
   <div class="listing-container">
     <div class="listing">
       <img class="listing-img" src="<%= listing.image %>" alt="image">
-      <h3 class="listing-heading">
-        <%= listing.title %>
-      </h3>
-      <p>
-        <%= listing.description %> <br>
-          &#8377; <%= listing.price %>
-      </p>
+      <div class="listing-content">
+        <h3 class="listing-heading">
+          <%= listing.title %>
+        </h3>
+        <p>
+          <%= listing.description %> <br>
+            &#8377; <%= listing.price %>
+        </p>
+      </div>
     </div>
     <div>
       <form action="/listings/prune/<%= listing._id %>" method="post">
