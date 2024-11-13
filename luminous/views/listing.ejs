@@ -9,13 +9,15 @@
         </h3>
         <p>
           <%= listing.description %> <br>
-            &#8377; <%= listing.price %>
+            &#8377; <%= listing.price.toLocaleString() %>
         </p>
       </div>
     </div>
-    <div>
-      <form action="/listings/prune/<%= listing._id %>" method="post">
-        <button type="submit">Delete Listing</button>
-      </form>
-    </div>
+    <% if(listing.createdBy.toString()===user.id.toString()) { %>
+      <div>
+        <form action="/listings/<%= listing._id %>/<%= listing.createdBy %>" method="post">
+          <button type="submit">Delete Listing</button>
+        </form>
+      </div>
+      <% } %>
   </div>

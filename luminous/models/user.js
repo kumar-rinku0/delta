@@ -1,4 +1,5 @@
 const { Schema, model } = require("mongoose");
+const Listing = require("./listing.js");
 
 const userSchema = new Schema(
   {
@@ -24,6 +25,10 @@ const userSchema = new Schema(
   },
   { timestamps: true }
 );
+
+userSchema.post("findOneAndDelete", async (user) => {
+  await Listing.deleteMany({ createdBy: user._id });
+});
 
 const User = model("User", userSchema);
 

@@ -6,6 +6,7 @@ const connection = require("./utils/init.js");
 const listingRouter = require("./routes/listing.js");
 const userRouter = require("./routes/user.js");
 const sessions = require("./utils/sessions.js");
+const ExpressError = require("./utils/express-error.js");
 
 const app = express();
 const PORT = process.env.PORT || 8000;
@@ -17,9 +18,9 @@ app.use(express.urlencoded({ extended: true }));
 
 connection();
 
+// root route
 app.get("/", (req, res) => {
   if (!sessions[req.headers?.cookie?.split("=")[1]]) {
-    // res.status(401).send("session expired. login again!!");
     res.status(401).redirect("/user/signin");
   }
   console.log(sessions[req.headers?.cookie?.split("=")[1]]);
@@ -29,8 +30,7 @@ app.get("/", (req, res) => {
 // user is logged in or not check.
 const isLogInUser = (req, res, next) => {
   if (!sessions[req.headers?.cookie?.split("=")[1]]) {
-    res.status(401).send("session expired. login again!!");
-    // res.status(401).redirect("/user/signin");
+    throw new ExpressError(401, "session expired. login again!!");
   }
   console.log(sessions[req.headers?.cookie?.split("=")[1]]);
   return next();
@@ -43,7 +43,15 @@ app.use("/listings", isLogInUser, listingRouter);
 // err middleware
 app.use((err, req, res, next) => {
   const { status = 500, message } = err;
-  res.status(status).send(message);
+  const user = sessions[req.headers?.cookie?.split("=")[1]];
+  if (!user) {
+    res
+      .status(status)
+      .render("error.ejs", { message, title: "Error Page!!", user: null });
+  }
+  res
+    .status(status)
+    .render("error.ejs", { message, title: "Error Page!!", user });
 });
 
 app.listen(PORT, () => {
