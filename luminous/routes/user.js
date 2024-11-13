@@ -1,6 +1,8 @@
 const { Router } = require("express");
 const { randomUUID } = require("crypto");
 const sessions = require("../utils/sessions.js");
+const wrapAsync = require("../utils/wrap-async.js");
+const ExpressError = require("../utils/express-error.js");
 const User = require("../models/user.js");
 const route = Router();
 
@@ -24,8 +26,9 @@ route.get("/signout", (req, res) => {
 });
 
 // sign up middleware
-route.post("/signup", async (req, res, next) => {
-  try {
+route.post(
+  "/signup",
+  wrapAsync(async (req, res, next) => {
     const { username, email, password } = req.body;
     const user1 = new User({
       username,
@@ -34,21 +37,21 @@ route.post("/signup", async (req, res, next) => {
     });
     await user1.save();
     res.status(200).redirect("/user/signin");
-  } catch (err) {
-    next(err);
-  }
-});
+  })
+);
 
 // sign in middleware
-route.post("/signin", async (req, res, next) => {
-  try {
+route.post(
+  "/signin",
+  wrapAsync(async (req, res) => {
     const { username, password } = req.body;
+    console.log(req.body);
     const user = await User.findOne({ username: username });
     if (!user) {
-      res.send("Username is Incorrect!!");
+      throw new ExpressError(401, "Username is Incorrect!!");
     }
-    if (user.password != password) {
-      res.send("Password is Incorrect!!");
+    if (password !== user.password) {
+      throw new ExpressError(401, "Password is Incorrect!");
     }
     const sessionId = randomUUID();
     sessions[sessionId] = { username, id: user._id };
@@ -57,9 +60,7 @@ route.post("/signin", async (req, res, next) => {
       httpOnly: true,
     });
     res.status(200).redirect("/listings");
-  } catch (err) {
-    next(err);
-  }
-});
+  })
+);
 
 module.exports = route;

@@ -39,16 +39,20 @@ route.post(
 );
 
 route.post(
-  "/prune/:id",
+  "/:id/:createdBy",
   wrapAsync(async (req, res) => {
-    const { id } = req.params;
+    const { id, createdBy } = req.params;
+    if (id.length != 24 || createdBy.length != 24) {
+      throw new ExpressError(400, "Incorrect listing!!");
+    }
     const user = sessions[req.headers?.cookie?.split("=")[1]];
-    const listing = await Listing.findById(id);
-    if (user.id.toString() !== listing.createdBy.toString()) {
+    // const listing = await Listing.findById(id);
+    if (user.id.toString() !== createdBy) {
       throw new ExpressError(401, "Unauthorized pruning!!");
     }
     await Listing.findByIdAndDelete(id);
-    res.status(200).send("listing pruned.");
+    throw new ExpressError(200, "Listing pruned!!");
+    // res.status(200).redirect("/listing");
   })
 );
 
@@ -58,12 +62,12 @@ route.get(
     const user = sessions[req.headers?.cookie?.split("=")[1]];
     const { id } = req.params;
     if (id.toString().length != 24) {
-      next(new ExpressError(400, "Listing id is incorrect!!"));
+      throw new ExpressError(400, "Listing id is incorrect!!");
     }
     const listing = await Listing.findById(id);
     if (!listing) {
       // throw new ExpressError(404, "Listing Not Found!!");  // async fuction can throw errors this only if they are wrapped with async_wrapper.
-      next(new ExpressError(404, "Listing not Found!!"));
+      throw new ExpressError(404, "Listing not Found!!");
     }
     res.status(200).render("listing.ejs", {
       listing,
