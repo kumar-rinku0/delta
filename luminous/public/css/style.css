@@ -133,23 +133,6 @@
 }
 
 
-@media (min-width: 720px) {
-  .form {
-    width: 50%;
-  }
-  .listing-img {
-    width: 50rem;
-    height: 30rem;
-  }
-
-}
-
-@media (min-width: 1200px) {
-  .form {
-    width: 25%;
-  }
-}
-
 #check-label {
   font-size: small;
 }
@@ -159,6 +142,7 @@
 }
 
 .listing-form {
+  width: 90%;
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
@@ -172,12 +156,66 @@
 }
 
 .listing-form-input label{
-  padding-right: 1rem;
+  padding-right: 0.5rem;
 }
 
 .listing-form-input {
   display: flex;
+  padding: 0.5rem;
+  gap: 0.2rem;
+}
+
+textarea {
+  width: 100%;
+  height: 4rem;
+}
+
+fieldset {
+  width: 100%;
+}
+
+.listing-review {
   padding: 1rem;
-  gap: 0.5rem;
+}
+
+.btn {
+  padding: 0.5rem;
+}
+
+@media (min-width: 720px) {
+  .form {
+    width: 50%;
+  }
+  .listing-img {
+    width: 50rem;
+    height: 30rem;
+  }
+  .listing-form  {
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  .listing-form-input label{
+    padding-right: 1rem;
+  }
+  .listing-form-input {
+    display: flex;
+    padding: 1rem;
+    gap: 0.5rem;
+  }
+
+}
+
+@media (min-width: 1200px) {
+  .form {
+    width: 25%;
+  }
+  .listing-form  {
+    width: 30%;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
 }
 
