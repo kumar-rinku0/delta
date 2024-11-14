@@ -16,7 +16,7 @@
     <% if(listing.createdBy.toString()===user.id.toString()) { %>
       <div>
         <form action="/listings/<%= listing._id %>/<%= listing.createdBy %>" method="post">
-          <button type="submit">Delete Listing</button>
+          <button type="submit" class="btn">delete Listing</button>
         </form>
       </div>
       <% } else { %>

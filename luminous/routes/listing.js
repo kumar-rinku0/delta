@@ -23,7 +23,22 @@ route.get(
     const listings = await Listing.find({});
     res
       .status(200)
-      .render("listings.ejs", { listings, user, title: "All listings!!" });
+      .render("listings.ejs", { listings, user, title: "All listings!!!" });
+  })
+);
+
+route.get(
+  "/user/:username",
+  wrapAsync(async (req, res) => {
+    const user = sessions[req.headers?.cookie?.split("=")[1]];
+    const { username } = req.params;
+    if (username !== user.username.toString()) {
+      throw new ExpressError(400, "Bad Requiest!! incorrect username!");
+    }
+    const listings = await Listing.find({ createdBy: user.id });
+    res
+      .status(200)
+      .render("listings.ejs", { listings, user, title: "my listings!!" });
   })
 );
 
@@ -73,6 +88,9 @@ route.post(
     const listing = await Listing.findById(id);
     if (!listing) {
       throw new ExpressError(404, "Listing not Found!!");
+    }
+    if (listing.createdBy.toString() === user.id.toString()) {
+      throw new ExpressError(403, "You can't rate your own listing!!");
     }
     const review = new Review({
       rating,

@@ -1,17 +1,37 @@
 <%- include("partials/boilerplate", { title, user }); %>
   <h3 class="heading">
-    Luminious Listings for <%= user.username %>!!
+    <% if(title==="my listings!!" ) { %>
+      <%= user.username %>'s luminious listings!!
+        <div>
+          <a href="/listings">all listings</a>
+        </div>
+        <% } else { %>
+          Luminious Listings for <%= user.username %>!!
+            <div>
+              <a href="/listings/user/<%= user.username %>">my listings</a>
+            </div>
+            <% } %>
   </h3>
   <div class="container">
-    <% for(listing of listings) { %>
-      <div class="card">
-        <a href="/listings/<%= listing._id %>">
-          <img class="listings-img" src="<%= listing.image %>" alt="image">
-          <div>
-            <%= listing.title %> <br>
-              &#8377; <%= listing.price.toLocaleString() %>
-          </div>
-        </a>
+    <% if(!listings.length) { %>
+      <div class="error-container">
+        <h3 class="error-message">
+          <b>
+            Create new listing to see listing here!!
+          </b>
+        </h3>
       </div>
-      <% } %>
+      <% } else { %>
+        <% for(listing of listings) { %>
+          <div class="card">
+            <a href="/listings/<%= listing._id %>">
+              <img class="listings-img" src="<%= listing.image %>" alt="image">
+              <div>
+                <%= listing.title %> <br>
+                  &#8377; <%= listing.price.toLocaleString() %>
+              </div>
+            </a>
+          </div>
+          <% } %>
+            <% } %>
   </div>
