@@ -3,7 +3,6 @@ const Listing = require("../models/listing.js");
 const Review = require("../models/review.js");
 const ExpressError = require("../utils/express-error.js");
 const wrapAsync = require("../utils/wrap-async.js");
-const sessions = require("../utils/sessions.js");
 const route = Router();
 
 route.get("/wrong", (req, res) => {
@@ -11,7 +10,7 @@ route.get("/wrong", (req, res) => {
 });
 
 route.get("/new", (req, res) => {
-  const user = sessions[req.headers?.cookie?.split("=")[1]];
+  let user = req.user;
   res.status(200).render("newListing.ejs", { title: "new listing...", user });
 });
 
@@ -19,7 +18,7 @@ route.get("/new", (req, res) => {
 route.get(
   "/",
   wrapAsync(async (req, res) => {
-    const user = sessions[req.headers?.cookie?.split("=")[1]];
+    let user = req.user;
     const listings = await Listing.find({});
     res
       .status(200)
@@ -30,12 +29,12 @@ route.get(
 route.get(
   "/user/:username",
   wrapAsync(async (req, res) => {
-    const user = sessions[req.headers?.cookie?.split("=")[1]];
+    let user = req.user;
     const { username } = req.params;
     if (username !== user.username.toString()) {
       throw new ExpressError(400, "Bad Requiest!! incorrect username!");
     }
-    const listings = await Listing.find({ createdBy: user.id });
+    const listings = await Listing.find({ createdBy: user._id });
     res
       .status(200)
       .render("listings.ejs", { listings, user, title: "my listings!!" });
@@ -46,9 +45,9 @@ route.post(
   "/new",
   wrapAsync(async (req, res) => {
     const { listing } = req.body;
-    const user = sessions[req.headers?.cookie?.split("=")[1]];
+    let user = req.user;
     const newListing = new Listing(listing);
-    newListing.createdBy = user.id;
+    newListing.createdBy = user._id;
     await newListing.save();
     res.status(200).redirect("/listings");
   })
@@ -57,7 +56,7 @@ route.post(
 route.get(
   "/:id",
   wrapAsync(async (req, res, next) => {
-    const user = sessions[req.headers?.cookie?.split("=")[1]];
+    let user = req.user;
     const { id } = req.params;
     if (id.toString().length != 24) {
       throw new ExpressError(400, "Listing id is incorrect!!");
@@ -78,7 +77,7 @@ route.get(
 route.post(
   "/:id/review",
   wrapAsync(async (req, res) => {
-    const user = sessions[req.headers?.cookie?.split("=")[1]];
+    let user = req.user;
     const { id } = req.params;
     const { rating, msg } = req.body;
     console.log(req.body);
@@ -89,7 +88,7 @@ route.post(
     if (!listing) {
       throw new ExpressError(404, "Listing not Found!!");
     }
-    if (listing.createdBy.toString() === user.id.toString()) {
+    if (listing.createdBy.toString() === user._id.toString()) {
       throw new ExpressError(403, "You can't rate your own listing!!");
     }
     const review = new Review({
@@ -100,7 +99,11 @@ route.post(
     listing.reviews.push(review);
     await review.save();
     await listing.save();
-    throw new ExpressError(200, "Review saved!!");
+    res.status(200).render("listing.ejs", {
+      listing,
+      user,
+      title: "listing based on title",
+    });
   })
 );
 
@@ -112,9 +115,9 @@ route.post(
     if (id.length != 24 || createdBy.length != 24) {
       throw new ExpressError(400, "Incorrect listing!!");
     }
-    const user = sessions[req.headers?.cookie?.split("=")[1]];
+    let user = req.user;
     // const listing = await Listing.findById(id);
-    if (user.id.toString() !== createdBy) {
+    if (user._id.toString() !== createdBy) {
       throw new ExpressError(401, "Unauthorized pruning!!");
     }
     await Listing.findByIdAndDelete(id);
