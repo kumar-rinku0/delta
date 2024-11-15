@@ -2,11 +2,12 @@ require("dotenv").config();
 
 const express = require("express");
 const path = require("path");
+const cookieParser = require("cookie-parser");
 const connection = require("./utils/init.js");
 const listingRouter = require("./routes/listing.js");
 const userRouter = require("./routes/user.js");
-const sessions = require("./utils/sessions.js");
 const ExpressError = require("./utils/express-error.js");
+const { getUser } = require("./utils/jwt.js");
 
 const app = express();
 const PORT = process.env.PORT || 8000;
@@ -15,26 +16,28 @@ app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 app.use(express.static(path.join(__dirname, "public")));
 app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
 
 connection();
 
-// root route
-app.get("/", (req, res) => {
-  if (!sessions[req.headers?.cookie?.split("=")[1]]) {
-    res.status(401).redirect("/user/signin");
-  }
-  console.log(sessions[req.headers?.cookie?.split("=")[1]]);
-  res.status(200).redirect(`/listings`);
-});
-
 // user is logged in or not check.
 const isLogInUser = (req, res, next) => {
-  if (!sessions[req.headers?.cookie?.split("=")[1]]) {
+  let user = getUser(req.cookies?._session_token);
+  req.user = user;
+  if (!user && !req?.baseUrl) {
+    res.redirect("/user/signin");
+  }
+  if (!user) {
     throw new ExpressError(401, "session expired. login again!!");
   }
-  console.log(sessions[req.headers?.cookie?.split("=")[1]]);
+  console.log(user);
   return next();
 };
+
+// root route
+app.get("/", isLogInUser, (req, res) => {
+  res.status(200).redirect(`/listings`);
+});
 
 // route middleware
 app.use("/user", userRouter);
@@ -43,7 +46,7 @@ app.use("/listings", isLogInUser, listingRouter);
 // err middleware
 app.use((err, req, res, next) => {
   const { status = 500, message } = err;
-  const user = sessions[req.headers?.cookie?.split("=")[1]];
+  let user = req.user;
   if (!user) {
     res
       .status(status)

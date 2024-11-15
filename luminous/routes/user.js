@@ -1,9 +1,9 @@
 const { Router } = require("express");
 const { randomUUID } = require("crypto");
-const sessions = require("../utils/sessions.js");
 const wrapAsync = require("../utils/wrap-async.js");
 const ExpressError = require("../utils/express-error.js");
 const User = require("../models/user.js");
+const { setUser } = require("../utils/jwt.js");
 const route = Router();
 
 // sign in get requist
@@ -18,10 +18,7 @@ route.get("/signup", (req, res) => {
 
 // sign out requist
 route.get("/signout", (req, res) => {
-  res.cookie("_session_uuid", null, {
-    secure: true,
-    httpOnly: true,
-  });
+  res.cookie("_session_token", null);
   res.status(200).redirect("/user/signin");
 });
 
@@ -53,12 +50,10 @@ route.post(
     if (password !== user.password) {
       throw new ExpressError(401, "Password is Incorrect!");
     }
-    const sessionId = randomUUID();
-    sessions[sessionId] = { username, id: user._id };
-    res.cookie("_session_uuid", sessionId, {
-      secure: true,
-      httpOnly: true,
-    });
+    // const sessionId = randomUUID();
+    // sessions[sessionId] = { username, id: user._id };
+    const token = setUser(user);
+    res.cookie("_session_token", token);
     res.status(200).redirect("/listings");
   })
 );

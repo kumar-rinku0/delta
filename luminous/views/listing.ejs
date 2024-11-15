@@ -13,7 +13,7 @@
         </p>
       </div>
     </div>
-    <% if(listing.createdBy.toString()===user.id.toString()) { %>
+    <% if(listing.createdBy.toString()===user._id.toString()) { %>
       <div>
         <form action="/listings/<%= listing._id %>/<%= listing.createdBy %>" method="post">
           <button type="submit" class="btn">delete Listing</button>
