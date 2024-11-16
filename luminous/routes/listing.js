@@ -80,7 +80,6 @@ route.post(
     let user = req.user;
     const { id } = req.params;
     const { rating, msg } = req.body;
-    console.log(req.body);
     if (id.toString().length != 24) {
       throw new ExpressError(400, "Listing id is incorrect!!");
     }
@@ -91,6 +90,20 @@ route.post(
     if (listing.createdBy.toString() === user._id.toString()) {
       throw new ExpressError(403, "You can't rate your own listing!!");
     }
+    const popListing = await Listing.findById(id).populate(
+      "reviews",
+      "username"
+    );
+    const reviews = popListing.reviews.filter((value) => {
+      return value.username === user.username;
+    });
+    if (reviews[0]) {
+      const review = reviews[0];
+      review.rating = rating;
+      review.msg = msg;
+      await review.save();
+      throw new ExpressError(201, "updated!!");
+    }
     const review = new Review({
       rating,
       msg,
@@ -99,11 +112,7 @@ route.post(
     listing.reviews.push(review);
     await review.save();
     await listing.save();
-    res.status(200).render("listing.ejs", {
-      listing,
-      user,
-      title: "listing based on title",
-    });
+    res.status(201).redirect(`/listings/${listing._id}`);
   })
 );
 
