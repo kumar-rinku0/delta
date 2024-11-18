@@ -42,15 +42,10 @@ route.post(
   "/signin",
   wrapAsync(async (req, res) => {
     const { username, password } = req.body;
-    const user = await User.findOne({ username: username });
-    if (!user) {
-      throw new ExpressError(401, "Username is Incorrect!!");
+    const user = await User.isRightUser(username, password);
+    if (user.message) {
+      throw new ExpressError(401, user.message);
     }
-    if (password !== user.password) {
-      throw new ExpressError(401, "Password is Incorrect!");
-    }
-    // const sessionId = randomUUID();
-    // sessions[sessionId] = { username, id: user._id };
     const token = setUser(user);
     res.cookie("_session_token", token);
     res.status(200).redirect("/listings");

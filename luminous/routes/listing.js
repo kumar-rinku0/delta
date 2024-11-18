@@ -19,10 +19,13 @@ route.get(
   "/",
   wrapAsync(async (req, res) => {
     let user = req.user;
-    const listings = await Listing.find({});
+    let listings = await Listing.find({});
+    listings = listings.filter((item) => {
+      return item.createdBy != user._id;
+    });
     res
       .status(200)
-      .render("listings.ejs", { listings, user, title: "All listings!!!" });
+      .render("listings.ejs", { listings, user, title: "listings!!!" });
   })
 );
 
@@ -90,19 +93,22 @@ route.post(
     if (listing.createdBy.toString() === user._id.toString()) {
       throw new ExpressError(403, "You can't rate your own listing!!");
     }
-    const popListing = await Listing.findById(id).populate(
-      "reviews",
-      "username"
-    );
+    const popListing = await Listing.findById(id).populate("reviews");
     const reviews = popListing.reviews.filter((value) => {
       return value.username === user.username;
     });
     if (reviews[0]) {
       const review = reviews[0];
-      review.rating = rating;
-      review.msg = msg;
+      review.rating = rating || review.rating;
+      review.msg = msg || review.msg;
       await review.save();
       throw new ExpressError(201, "updated!!");
+    }
+    if (!rating) {
+      throw new ExpressError(400, "Bad Req!! No rating stars provided.");
+    }
+    if (!msg.trim()) {
+      throw new ExpressError(400, "Bad Req!! No msg.");
     }
     const review = new Review({
       rating,
