@@ -1,4 +1,5 @@
 const { Schema, model } = require("mongoose");
+const { randomBytes, createHmac } = require("crypto");
 const Listing = require("./listing.js");
 
 const userSchema = new Schema(
@@ -17,6 +18,10 @@ const userSchema = new Schema(
       lowercase: true,
       trim: true,
     },
+    salt: {
+      type: String,
+      trim: true,
+    },
     password: {
       type: String,
       required: true,
@@ -26,8 +31,42 @@ const userSchema = new Schema(
   { timestamps: true }
 );
 
+// Password hashing middleware before saving the user
+userSchema.pre("save", async function (next) {
+  if (this.isModified("password")) {
+    const salt = randomBytes(16).toString();
+    const hexcode = createHmac("sha512", salt)
+      .update(this.password)
+      .digest("hex");
+    this.salt = salt;
+    this.password = hexcode;
+  }
+  next();
+});
+
+// Method to compare passwords during login
+userSchema.static("isRightUser", async (username, password) => {
+  const user = await User.findOne({ username });
+  if (!user) {
+    return { message: "wrong username." };
+  }
+  const salt = user.salt;
+  const hexcode = createHmac("sha512", salt).update(password).digest("hex");
+  if (hexcode === user.password) {
+    return user;
+  } else {
+    return { message: "wrong password." };
+  }
+});
+
 userSchema.post("findOneAndDelete", async (user) => {
-  await Listing.deleteMany({ createdBy: user._id });
+  const result = await Listing.deleteMany({ createdBy: user._id });
+  console.log(result);
+});
+
+userSchema.pre("deleteMany", async () => {
+  const result = await Listing.deleteMany({});
+  console.log(result);
 });
 
 const User = model("User", userSchema);
