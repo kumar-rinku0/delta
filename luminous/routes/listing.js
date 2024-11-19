@@ -3,6 +3,7 @@ const Listing = require("../models/listing.js");
 const Review = require("../models/review.js");
 const ExpressError = require("../utils/express-error.js");
 const wrapAsync = require("../utils/wrap-async.js");
+const User = require("../models/user.js");
 const route = Router();
 
 route.get("/wrong", (req, res) => {
@@ -19,10 +20,13 @@ route.get(
   "/",
   wrapAsync(async (req, res) => {
     let user = req.user;
-    const listings = await Listing.find({});
+    let listings = await Listing.find({}).sort({ createdAt: -1 });
+    listings = listings.filter((item) => {
+      return item.createdBy != user._id;
+    });
     res
       .status(200)
-      .render("listings.ejs", { listings, user, title: "All listings!!!" });
+      .render("listings.ejs", { listings, user, title: "listings!!!" });
   })
 );
 
@@ -34,7 +38,9 @@ route.get(
     if (username !== user.username.toString()) {
       throw new ExpressError(400, "Bad Requiest!! incorrect username!");
     }
-    const listings = await Listing.find({ createdBy: user._id });
+    const listings = await Listing.find({ createdBy: user._id }).sort({
+      createdAt: -1,
+    });
     res
       .status(200)
       .render("listings.ejs", { listings, user, title: "my listings!!" });
@@ -62,6 +68,9 @@ route.get(
       throw new ExpressError(400, "Listing id is incorrect!!");
     }
     const listing = await Listing.findById(id).populate("reviews");
+    if (listing.createdBy != user._id) {
+      var listingCreatedBy = await User.findById(listing.createdBy);
+    }
     if (!listing) {
       // throw new ExpressError(404, "Listing Not Found!!");  // async fuction can throw errors this only if they are wrapped with async_wrapper.
       throw new ExpressError(404, "Listing not Found!!");
@@ -69,6 +78,7 @@ route.get(
     res.status(200).render("listing.ejs", {
       listing,
       user,
+      listingCreatedBy,
       title: "listing based on title",
     });
   })
@@ -80,7 +90,6 @@ route.post(
     let user = req.user;
     const { id } = req.params;
     const { rating, msg } = req.body;
-    console.log(req.body);
     if (id.toString().length != 24) {
       throw new ExpressError(400, "Listing id is incorrect!!");
     }
@@ -91,6 +100,23 @@ route.post(
     if (listing.createdBy.toString() === user._id.toString()) {
       throw new ExpressError(403, "You can't rate your own listing!!");
     }
+    const popListing = await Listing.findById(id).populate("reviews");
+    const reviews = popListing.reviews.filter((value) => {
+      return value.username === user.username;
+    });
+    if (reviews[0]) {
+      const review = reviews[0];
+      review.rating = rating || review.rating;
+      review.msg = msg || review.msg;
+      await review.save();
+      res.status(201).redirect(`/listings/${listing._id}`);
+    }
+    if (!rating) {
+      throw new ExpressError(400, "Bad Req!! No rating stars provided.");
+    }
+    if (!msg.trim()) {
+      throw new ExpressError(400, "Bad Req!! No msg.");
+    }
     const review = new Review({
       rating,
       msg,
@@ -99,11 +125,7 @@ route.post(
     listing.reviews.push(review);
     await review.save();
     await listing.save();
-    res.status(200).render("listing.ejs", {
-      listing,
-      user,
-      title: "listing based on title",
-    });
+    res.status(201).redirect(`/listings/${listing._id}`);
   })
 );
 

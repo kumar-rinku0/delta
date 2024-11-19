@@ -1,17 +1,4 @@
 <%- include("partials/boilerplate", { title, user }); %>
-  <h3 class="heading">
-    <% if(title==="my listings!!" ) { %>
-      <%= user.username %>'s luminious listings!!
-        <div>
-          <a href="/listings">all listings</a>
-        </div>
-        <% } else { %>
-          Luminious Listings for <%= user.username %>!!
-            <div>
-              <a href="/listings/user/<%= user.username %>">my listings</a>
-            </div>
-            <% } %>
-  </h3>
   <div class="container">
     <% if(!listings.length) { %>
       <div class="error-container">
@@ -31,7 +18,12 @@
                   <%= listing.title %>
                 </div>
                 <div>
-                  &#8377; <%= listing.price.toLocaleString() %>
+                  <div>
+                    &#8377; <%= listing.price.toLocaleString() %>
+                  </div>
+                  <div>
+                    <%= listing.createdAt.toLocaleString() %>
+                  </div>
                 </div>
               </div>
             </a>

@@ -30,7 +30,6 @@ const isLogInUser = (req, res, next) => {
   if (!user) {
     throw new ExpressError(401, "session expired. login again!!");
   }
-  console.log(user);
   return next();
 };
 
@@ -50,11 +49,11 @@ app.use((err, req, res, next) => {
   if (!user) {
     res
       .status(status)
-      .render("error.ejs", { message, title: "Error Page!!", user: null });
+      .render("error.ejs", { message, title: `${status} !!`, user: null });
   }
   res
     .status(status)
-    .render("error.ejs", { message, title: "Error Page!!", user });
+    .render("error.ejs", { message, title: `${status} !!`, user });
 });
 
 app.listen(PORT, () => {
