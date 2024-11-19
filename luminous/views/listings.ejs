@@ -18,7 +18,12 @@
                   <%= listing.title %>
                 </div>
                 <div>
-                  &#8377; <%= listing.price.toLocaleString() %>
+                  <div>
+                    &#8377; <%= listing.price.toLocaleString() %>
+                  </div>
+                  <div>
+                    <%= listing.createdAt.toLocaleString() %>
+                  </div>
                 </div>
               </div>
             </a>

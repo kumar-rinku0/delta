@@ -6,10 +6,10 @@
 
 .btn_one i {
   color: black;
-  font-size: 20px;
+  font-size: 1.5rem;
   position: absolute;
-  left: 10px;
-  top: 20px;
+  left: 1.5rem;
+  top: 1.25rem;
   cursor: pointer;
 }
 
@@ -52,7 +52,7 @@
 }
 
 
-.menu li a {
+.menu a {
   color: azure;
   text-decoration: none;
 }

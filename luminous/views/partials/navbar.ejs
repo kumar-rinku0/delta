@@ -21,39 +21,40 @@
       <div class="menu">
         <ul>
           <% if(!user) { %>
-            <li>
-              <i class="fa-solid fa-right-to-bracket"></i>
-              <a href="/user/signin">sign in</a>
-            </li>
-            <li>
-              <i class="fa-solid fa-user-plus"></i>
-              <a href="/user/signup"> sign up</a>
-            </li>
+            <a href="/user/signin">
+              <li>
+                <i class="fa-solid fa-right-to-bracket"></i>
+                sign in
+              </li>
+            </a>
+            <a href="/user/signup">
+              <li>
+                <i class="fa-solid fa-user-plus"></i>
+                sign up
+              </li>
+            </a>
             <% } else { %>
-              <li>
-                <i class="fa-solid fa-user"></i>
-                <a href="/listings/user/<%= user.username %>">
-                  <%= user.username %>
-                </a>
-              </li>
-              <li>
-                <i class="fa-solid fa-right-from-bracket"></i>
-                <a href="/user/signout">sign out</a>
-              </li>
-              <% } %>
+              <a href="/listings/user/<%= user.username %>">
                 <li>
-                  <i class="fa-solid fa-house"></i>
-                  <a href="/listings">home</a>
-                </li>
-        </ul>
-      </div>
+                  <i class="fa-solid fa-user"></i>
 
-      <div class="social_media">
-        <ul>
-          <a href="#"><i class="fa-brands fa-facebook"></i></i></a>
-          <a href="#"><i class="fa-brands fa-twitter"></i></a>
-          <a href="#"><i class="fa-brands fa-instagram"></i></i></a>
-          <a href="#"><i class="fa-brands fa-youtube"></i></a>
+                  <%= user.username %>
+
+                </li>
+              </a>
+              <a href="/user/signout">
+                <li>
+                  <i class="fa-solid fa-right-from-bracket"></i>
+                  sign out
+                </li>
+              </a>
+              <% } %>
+                <a href="/listings">
+                  <li>
+                    <i class="fa-solid fa-house"></i>
+                    home
+                  </li>
+                </a>
         </ul>
       </div>
     </div>
