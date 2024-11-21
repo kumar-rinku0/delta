@@ -52,14 +52,13 @@
 }
 
 .logo-icon {
+  text-decoration: none;
+  color: black;
   display: flex;
   align-items: center;
+  gap: 0.1rem;
 }
 
-.logo-icon .svg{
-  width: 2rem;
-  height: 2rem;
-}
 
 #navbar {
   width: 100%;
