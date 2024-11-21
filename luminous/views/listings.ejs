@@ -1,4 +1,4 @@
-<%- include("partials/boilerplate", { title, user }); %>
+<%- layout("partials/boilerplate", { title, user }); %>
   <div class="container">
     <% if(!listings.length) { %>
       <div class="error-container">

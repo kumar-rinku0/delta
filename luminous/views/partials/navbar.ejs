@@ -57,8 +57,8 @@
               <% } %>
                 <a href="/listings">
                   <li>
-                    <i class="fa-solid fa-house"></i>
-                    home
+                    <i class="fa-solid fa-lines-leaning"></i>
+                    listings
                   </li>
                 </a>
         </ul>
@@ -79,15 +79,16 @@
     <% if(!user) { %>
       <a href="/user/signin">
         sign in</a>
+      <a href="/user/signup">sign up</a>
       <% } else { %>
         <a href="/user/signout">
           sign out</a>
         <a href="/listings/user/<%= user.username %>">
           <%= user.username %>
         </a>
+        <a href="/listings/new">create new</a>
         <% } %>
           <a href="/listings">listings</a>
-          <a href="/listings/new">create new</a>
   </div>
 
 </nav>
