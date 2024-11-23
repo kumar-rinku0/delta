@@ -18,6 +18,17 @@ const userSchema = new Schema(
       lowercase: true,
       trim: true,
     },
+    // status: {
+    //   type: String,
+    //   enum: {
+    //     values: ["active", "inactive"],
+    //     message: "status can only be active or inactive!!",
+    //   },
+    // },
+    // permitions: {
+    //   type: String,
+    //   enum: ["read", "write", "delete"],
+    // },
     salt: {
       type: String,
       trim: true,

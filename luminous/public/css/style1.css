@@ -208,6 +208,16 @@ fieldset {
   padding: 0.5rem;
 }
 
+.position-fix {
+  position: fixed;
+  bottom: 1rem;
+  left: 1.5rem;
+}
+
+.position-fix input {
+  margin: 0;
+}
+
 @media (min-width: 720px) {
   .form {
     width: 50%;
