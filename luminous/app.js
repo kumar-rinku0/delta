@@ -3,6 +3,7 @@ require("dotenv").config();
 const express = require("express");
 const path = require("path");
 const cookieParser = require("cookie-parser");
+const ejsMate = require("ejs-mate");
 const connection = require("./utils/init.js");
 const listingRouter = require("./routes/listing.js");
 const userRouter = require("./routes/user.js");
@@ -12,6 +13,7 @@ const { getUser } = require("./utils/jwt.js");
 const app = express();
 const PORT = process.env.PORT || 8000;
 
+app.engine("ejs", ejsMate);
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 app.use(express.static(path.join(__dirname, "public")));

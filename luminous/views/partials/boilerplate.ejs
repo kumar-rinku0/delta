@@ -4,11 +4,16 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <%- include("head", { title }); %>
+  <%- partial("head", { title }); %>
 </head>
 
 <body>
-  <%- include("navbar", { user }); %>
+  <header>
+    <%- partial("navbar", { user }); %>
+  </header>
+  <section>
+    <%- body -%>
+  </section>
 </body>
 
 </html>
