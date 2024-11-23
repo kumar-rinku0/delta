@@ -7,6 +7,7 @@ const ejsMate = require("ejs-mate");
 const connection = require("./utils/init.js");
 const listingRouter = require("./routes/listing.js");
 const userRouter = require("./routes/user.js");
+const adminRouter = require("./routes/admin.js");
 const ExpressError = require("./utils/express-error.js");
 const { getUser } = require("./utils/jwt.js");
 
@@ -43,6 +44,7 @@ app.get("/", isLogInUser, (req, res) => {
 // route middleware
 app.use("/user", userRouter);
 app.use("/listings", isLogInUser, listingRouter);
+app.use("/admin", isLogInUser, adminRouter);
 
 // err middleware
 app.use((err, req, res, next) => {

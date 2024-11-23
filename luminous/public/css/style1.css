@@ -12,6 +12,11 @@
   padding: 1rem 0;
 }
 
+.flex-gap {
+  display: flex;
+  gap: 0.5rem;
+}
+
 .container {
   display: flex;
   justify-content: center;

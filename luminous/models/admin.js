@@ -2,7 +2,7 @@ const { Schema, model } = require("mongoose");
 const { randomBytes, createHmac } = require("crypto");
 const Listing = require("./listing.js");
 
-const userSchema = new Schema(
+const adminSchema = new Schema(
   {
     username: {
       type: String,
@@ -18,13 +18,6 @@ const userSchema = new Schema(
       lowercase: true,
       trim: true,
     },
-    status: {
-      type: String,
-      enum: {
-        values: ["active", "inactive"],
-        message: "status can only be active or inactive!!",
-      },
-    },
     salt: {
       type: String,
       trim: true,
@@ -39,7 +32,7 @@ const userSchema = new Schema(
 );
 
 // Password hashing middleware before saving the user
-userSchema.pre("save", async function (next) {
+adminSchema.pre("save", async function (next) {
   if (this.isModified("password")) {
     const salt = randomBytes(16).toString();
     const hexcode = createHmac("sha512", salt)
@@ -52,32 +45,30 @@ userSchema.pre("save", async function (next) {
 });
 
 // Method to compare passwords during login
-userSchema.static("isRightUser", async (username, password) => {
-  const user = await User.findOne({ username });
+adminSchema.static("isRightUser", async (username, password) => {
+  const user = await Admin.findOne({ username });
   if (!user) {
-    return { message: "wrong username." };
+    return { message: "wrong admin username." };
   }
   const salt = user.salt;
   const hexcode = createHmac("sha512", salt).update(password).digest("hex");
-  if (hexcode !== user.password) {
-    return { message: "wrong password." };
+  if (hexcode === user.password) {
+    return user;
+  } else {
+    return { message: "wrong admin password." };
   }
-  if (user.status != "active") {
-    return { message: "blocked by admin!!" };
-  }
-  return user;
 });
 
-userSchema.post("findOneAndDelete", async (user) => {
+adminSchema.post("findOneAndDelete", async (user) => {
   const result = await Listing.deleteMany({ createdBy: user._id });
   console.log(result);
 });
 
-userSchema.pre("deleteMany", async () => {
+adminSchema.pre("deleteMany", async () => {
   const result = await Listing.deleteMany({});
   console.log(result);
 });
 
-const User = model("User", userSchema);
+const Admin = model("Admin", adminSchema);
 
-module.exports = User;
+module.exports = Admin;
