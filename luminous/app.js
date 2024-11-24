@@ -33,6 +33,18 @@ const isLogInUser = (req, res, next) => {
   if (!user) {
     throw new ExpressError(401, "session expired. login again!!");
   }
+  if (user.status !== "active") {
+    throw new ExpressError(401, "unauthorized req. or blocked by admin!!");
+  }
+  return next();
+};
+
+const isAdmin = (req, res, next) => {
+  let user = getUser(req.cookies?._session_token);
+  req.user = user;
+  if (user.role !== "admin") {
+    throw new ExpressError(403, "forbiden page!!");
+  }
   return next();
 };
 
@@ -44,7 +56,7 @@ app.get("/", isLogInUser, (req, res) => {
 // route middleware
 app.use("/user", userRouter);
 app.use("/listings", isLogInUser, listingRouter);
-app.use("/admin", isLogInUser, adminRouter);
+app.use("/admin", isLogInUser, isAdmin, adminRouter);
 
 // err middleware
 app.use((err, req, res, next) => {

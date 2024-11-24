@@ -18,6 +18,15 @@ const userSchema = new Schema(
       lowercase: true,
       trim: true,
     },
+    role: {
+      type: String,
+      required: true,
+      trim: true,
+      enum: {
+        values: ["local", "admin"],
+        message: "invailid role!",
+      },
+    },
     status: {
       type: String,
       enum: {
@@ -62,7 +71,7 @@ userSchema.static("isRightUser", async (username, password) => {
   if (hexcode !== user.password) {
     return { message: "wrong password." };
   }
-  if (user.status != "active") {
+  if (user.role !== "admin" && user.status !== "active") {
     return { message: "blocked by admin!!" };
   }
   return user;

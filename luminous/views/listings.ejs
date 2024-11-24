@@ -4,7 +4,11 @@
       <div class="error-container">
         <h3 class="error-message">
           <b>
-            Sorry!!! NO listings available now.
+            <% if(myListings) { %>
+              Create Listings!!
+              <% } else { %>
+                Sorry!!! NO listings available now.
+                <% } %>
           </b>
         </h3>
       </div>

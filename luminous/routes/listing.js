@@ -6,10 +6,6 @@ const wrapAsync = require("../utils/wrap-async.js");
 const User = require("../models/user.js");
 const route = Router();
 
-route.get("/wrong", (req, res) => {
-  abcd = abcd;
-});
-
 route.get("/new", (req, res) => {
   let user = req.user;
   res.status(200).render("newListing.ejs", { title: "new listing...", user });
@@ -26,7 +22,12 @@ route.get(
     });
     res
       .status(200)
-      .render("listings.ejs", { listings, user, title: "listings!!!" });
+      .render("listings.ejs", {
+        listings,
+        myListings: false,
+        user,
+        title: "listings!!!",
+      });
   })
 );
 
@@ -41,9 +42,12 @@ route.get(
     const listings = await Listing.find({ createdBy: user._id }).sort({
       createdAt: -1,
     });
-    res
-      .status(200)
-      .render("listings.ejs", { listings, user, title: "my listings!!" });
+    res.status(200).render("listings.ejs", {
+      listings,
+      user,
+      myListings: true,
+      title: "my listings!!",
+    });
   })
 );
 
