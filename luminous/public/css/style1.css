@@ -24,7 +24,7 @@
   flex-wrap: wrap;
 }
 
-.card {
+.my-card {
   width: 20rem;
   padding: 1rem;
 }
@@ -52,7 +52,7 @@
 }
 
 
-.card a {
+.my-card a {
   text-decoration: none;
 }
 
