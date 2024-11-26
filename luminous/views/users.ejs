@@ -27,7 +27,8 @@
                   </form>
                 </div>
                 <div>
-                  created at : <%= currUser.createdAt.toLocaleString() %>
+                  created at : <%= currUser.createdAt.toLocaleDateString("en-IN", { year: 'numeric' , month: 'short' ,
+                    day: 'numeric' , }); %>, <%= currUser.createdAt.toLocaleTimeString("th-EG").substring(0, 5) %>
                 </div>
               </div>
             </div>

@@ -8,18 +8,22 @@ const route = Router();
 
 // sign in get requist
 route.get("/signin", (req, res) => {
-  res.status(200).render("signin.ejs", { title: "signin page!", user: null });
+  return res
+    .status(200)
+    .render("signin.ejs", { title: "signin page!", user: null });
 });
 
 // sign up get requist
 route.get("/signup", (req, res) => {
-  res.status(200).render("signup.ejs", { title: "signup page!", user: null });
+  return res
+    .status(200)
+    .render("signup.ejs", { title: "signup page!", user: null });
 });
 
 // sign out requist
 route.get("/signout", (req, res) => {
   res.cookie("_session_token", null);
-  res.status(200).redirect("/user/signin");
+  return res.status(200).redirect("/");
 });
 
 // sign up middleware
@@ -38,10 +42,10 @@ route.post(
     await user1.save();
     const token = setUser(user1);
     res.cookie("_session_token", token);
-    if (actype === "admin") {
-      res.status(200).redirect("/admin/users");
-    }
-    res.status(200).redirect("/listings");
+    console.log(req.user);
+    const redirectUrl = req.session.originalUrl;
+    // (actype === "admin" ? "/admin/users" : "listing");
+    return res.status(200).redirect(redirectUrl);
   })
 );
 
@@ -56,10 +60,9 @@ route.post(
     }
     const token = setUser(user);
     res.cookie("_session_token", token);
-    if (user.role === "admin") {
-      res.status(200).redirect("/admin/users");
-    }
-    res.status(200).redirect("/listings");
+    const redirectUrl = req.session.originalUrl;
+    // (user.role === "admin" ? "/admin/users" : "listing");
+    res.status(200).redirect(redirectUrl);
   })
 );
 

@@ -3,13 +3,17 @@ require("dotenv").config();
 const express = require("express");
 const path = require("path");
 const cookieParser = require("cookie-parser");
+const session = require("express-session");
 const ejsMate = require("ejs-mate");
 const connection = require("./utils/init.js");
 const listingRouter = require("./routes/listing.js");
 const userRouter = require("./routes/user.js");
 const adminRouter = require("./routes/admin.js");
-const ExpressError = require("./utils/express-error.js");
-const { getUser } = require("./utils/jwt.js");
+const {
+  onlyLoggedInUser,
+  isAdmin,
+  isLoggedInCheck,
+} = require("./middlewares/auth.js");
 
 const app = express();
 const PORT = process.env.PORT || 8000;
@@ -20,43 +24,28 @@ app.set("views", path.join(__dirname, "views"));
 app.use(express.static(path.join(__dirname, "public")));
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
+app.set("trust proxy", 1); // trust first proxy
+app.use(
+  session({
+    secret: "keyboard cat",
+    resave: false,
+    saveUninitialized: true,
+    // cookie: { secure: true },
+  })
+);
 
+// database connection.
 connection();
 
-// user is logged in or not check.
-const isLogInUser = (req, res, next) => {
-  let user = getUser(req.cookies?._session_token);
-  req.user = user;
-  if (!user && !req?.baseUrl) {
-    res.redirect("/user/signin");
-  }
-  if (!user) {
-    throw new ExpressError(401, "session expired. login again!!");
-  }
-  if (user.status !== "active") {
-    throw new ExpressError(401, "unauthorized req. or blocked by admin!!");
-  }
-  return next();
-};
-
-const isAdmin = (req, res, next) => {
-  let user = getUser(req.cookies?._session_token);
-  req.user = user;
-  if (user.role !== "admin") {
-    throw new ExpressError(403, "forbiden page!!");
-  }
-  return next();
-};
-
 // root route
-app.get("/", isLogInUser, (req, res) => {
-  res.status(200).redirect(`/listings`);
+app.get("/", (req, res) => {
+  res.status(200).redirect("listings");
 });
 
 // route middleware
 app.use("/user", userRouter);
-app.use("/listings", isLogInUser, listingRouter);
-app.use("/admin", isLogInUser, isAdmin, adminRouter);
+app.use("/listings", isLoggedInCheck, listingRouter);
+app.use("/admin", onlyLoggedInUser, isAdmin, adminRouter);
 
 // err middleware
 app.use((err, req, res, next) => {
