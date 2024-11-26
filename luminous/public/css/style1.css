@@ -12,6 +12,11 @@
   padding: 1rem 0;
 }
 
+.flex-gap {
+  display: flex;
+  gap: 0.5rem;
+}
+
 .container {
   display: flex;
   justify-content: center;
@@ -206,6 +211,16 @@ fieldset {
 
 .review-card {
   padding: 0.5rem;
+}
+
+.position-fix {
+  position: fixed;
+  bottom: 1rem;
+  left: 1.5rem;
+}
+
+.position-fix input {
+  margin: 0;
 }
 
 @media (min-width: 720px) {

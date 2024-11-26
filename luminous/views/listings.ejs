@@ -4,7 +4,11 @@
       <div class="error-container">
         <h3 class="error-message">
           <b>
-            Create new listing to see listing here!!
+            <% if(myListings) { %>
+              Create Listings!!
+              <% } else { %>
+                Sorry!!! NO listings available now.
+                <% } %>
           </b>
         </h3>
       </div>
@@ -22,7 +26,8 @@
                     &#8377; <%= listing.price.toLocaleString() %>
                   </div>
                   <div>
-                    <%= listing.createdAt.toLocaleString() %>
+                    <%= listing.createdAt.toLocaleDateString("en-IN", { year: 'numeric' , month: 'short' ,
+                      day: 'numeric' , }); %>, <%= listing.createdAt.toLocaleTimeString("th-EG").substring(0, 5) %>
                   </div>
                 </div>
               </div>

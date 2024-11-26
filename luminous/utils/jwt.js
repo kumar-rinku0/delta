@@ -9,6 +9,8 @@ const setUser = (user) => {
       _id: user._id,
       username: user.username,
       email: user.email,
+      role: user.role,
+      status: user.status,
     },
     key,
     {

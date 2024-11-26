@@ -8,32 +8,44 @@ const route = Router();
 
 // sign in get requist
 route.get("/signin", (req, res) => {
-  res.status(200).render("signin.ejs", { title: "signin page!", user: null });
+  return res
+    .status(200)
+    .render("signin.ejs", { title: "signin page!", user: null });
 });
 
 // sign up get requist
 route.get("/signup", (req, res) => {
-  res.status(200).render("signup.ejs", { title: "signup page!", user: null });
+  return res
+    .status(200)
+    .render("signup.ejs", { title: "signup page!", user: null });
 });
 
 // sign out requist
 route.get("/signout", (req, res) => {
   res.cookie("_session_token", null);
-  res.status(200).redirect("/user/signin");
+  return res.status(200).redirect("/");
 });
 
 // sign up middleware
 route.post(
   "/signup",
   wrapAsync(async (req, res, next) => {
-    const { username, email, password } = req.body;
+    const { username, email, password, actype } = req.body;
+    console.log(actype);
     const user1 = new User({
       username,
       email,
       password,
+      role: actype,
     });
+    user1.status = "active";
     await user1.save();
-    res.status(200).redirect("/user/signin");
+    const token = setUser(user1);
+    res.cookie("_session_token", token);
+    console.log(req.user);
+    const redirectUrl = req.session.originalUrl;
+    // (actype === "admin" ? "/admin/users" : "listing");
+    return res.status(200).redirect(redirectUrl);
   })
 );
 
@@ -48,7 +60,9 @@ route.post(
     }
     const token = setUser(user);
     res.cookie("_session_token", token);
-    res.status(200).redirect("/listings");
+    const redirectUrl = req.session.originalUrl;
+    // (user.role === "admin" ? "/admin/users" : "listing");
+    res.status(200).redirect(redirectUrl);
   })
 );
 

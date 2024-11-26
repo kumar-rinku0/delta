@@ -19,14 +19,14 @@
             </div>
           </div>
     </div>
-    <% if(listing.createdBy.toString()===user._id.toString()) { %>
+    <% if(user && listing.createdBy.toString()===user._id.toString()) { %>
       <div>
         <form action="/listings/<%= listing._id %>/<%= listing.createdBy %>" method="post">
           <button type="submit" class="btn">delete Listing</button>
         </form>
       </div>
       <% } else { %>
-        <form action="/listings/<%= listing._id %>/review" method="post" class="listing-form">
+        <form action="/listings/<%= listing._id %>" method="post" class="listing-form">
           <fieldset>
             <legend>---stars---</legend>
             <div class="listing-form-input-container">

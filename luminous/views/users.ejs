@@ -1,0 +1,38 @@
+<%- layout("partials/boilerplate", { title, user }); %>
+  <div class="container">
+    <% if(!allUsers.length) { %>
+      <div class="error-container">
+        <h3 class="error-message">
+          <b>
+            No user created yet!!
+          </b>
+        </h3>
+      </div>
+      <% } else { %>
+        <% for(currUser of allUsers) { %>
+          <div class="card">
+            <div>
+              <div>
+                user : <%= currUser.username %>
+              </div>
+              <div>
+                <div class="flex-gap">
+                  <span>
+                    status :
+                  </span>
+                  <form action="/admin/<%= currUser._id %>" method="post">
+                    <button type="submit">
+                      <%= currUser.status %>
+                    </button>
+                  </form>
+                </div>
+                <div>
+                  created at : <%= currUser.createdAt.toLocaleDateString("en-IN", { year: 'numeric' , month: 'short' ,
+                    day: 'numeric' , }); %>, <%= currUser.createdAt.toLocaleTimeString("th-EG").substring(0, 5) %>
+                </div>
+              </div>
+            </div>
+          </div>
+          <% } %>
+            <% } %>
+  </div>

@@ -18,6 +18,22 @@ const userSchema = new Schema(
       lowercase: true,
       trim: true,
     },
+    role: {
+      type: String,
+      required: true,
+      trim: true,
+      enum: {
+        values: ["local", "admin"],
+        message: "invailid role!",
+      },
+    },
+    status: {
+      type: String,
+      enum: {
+        values: ["active", "inactive"],
+        message: "status can only be active or inactive!!",
+      },
+    },
     salt: {
       type: String,
       trim: true,
@@ -52,11 +68,13 @@ userSchema.static("isRightUser", async (username, password) => {
   }
   const salt = user.salt;
   const hexcode = createHmac("sha512", salt).update(password).digest("hex");
-  if (hexcode === user.password) {
-    return user;
-  } else {
+  if (hexcode !== user.password) {
     return { message: "wrong password." };
   }
+  if (user.role !== "admin" && user.status !== "active") {
+    return { message: "blocked by admin!!" };
+  }
+  return user;
 });
 
 userSchema.post("findOneAndDelete", async (user) => {

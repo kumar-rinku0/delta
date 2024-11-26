@@ -20,7 +20,7 @@
 
       <div class="menu">
         <ul>
-          <% if(!user) { %>
+          <% if(!user || user==null) { %>
             <a href="/user/signin">
               <li>
                 <i class="fa-solid fa-right-to-bracket"></i>
@@ -48,19 +48,28 @@
                   sign out
                 </li>
               </a>
-              <a href="/listings/new">
-                <li>
-                  <i class="fa-solid fa-circle-plus"></i>
-                  create new
-                </li>
-              </a>
-              <% } %>
-                <a href="/listings">
+              <% if(user.role=="admin" ) { %>
+                <a href="/admin/users">
                   <li>
-                    <i class="fa-solid fa-lines-leaning"></i>
-                    listings
+                    <i class="fa-solid fa-circle-plus"></i>
+                    users
                   </li>
                 </a>
+                <% } else {%>
+                  <a href="/listings/new">
+                    <li>
+                      <i class="fa-solid fa-circle-plus"></i>
+                      create new
+                    </li>
+                  </a>
+                  <% } %>
+                    <% } %>
+                      <a href="/listings">
+                        <li>
+                          <i class="fa-solid fa-lines-leaning"></i>
+                          listings
+                        </li>
+                      </a>
         </ul>
       </div>
     </div>
@@ -76,19 +85,22 @@
     <i class="fa-solid fa-s"></i>
   </a>
   <div class="navigation desktop">
-    <% if(!user) { %>
-      <a href="/user/signin">
-        sign in</a>
+    <% if(!user || user==null) { %>
+      <a href="/user/signin">sign in</a>
       <a href="/user/signup">sign up</a>
+      <a href="/listings">listings</a>
       <% } else { %>
-        <a href="/user/signout">
-          sign out</a>
+        <a href="/user/signout">sign out</a>
         <a href="/listings/user/<%= user.username %>">
           <%= user.username %>
         </a>
-        <a href="/listings/new">create new</a>
-        <% } %>
-          <a href="/listings">listings</a>
+        <a href="/listings">listings</a>
+        <% if(user.role=="admin" ) { %>
+          <a href="/admin/users">users</a>
+          <% } else { %>
+            <a href="/listings/new">create new</a>
+            <% } %>
+              <% } %>
   </div>
 
 </nav>
