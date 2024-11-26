@@ -23,7 +23,11 @@ route.get("/signup", (req, res) => {
 // sign out requist
 route.get("/signout", (req, res) => {
   res.cookie("_session_token", null);
-  req.session.regenerate();
+  req.session.regenerate((err) => {
+    if (err) {
+      throw new ExpressError(500, "session error!");
+    }
+  });
   return res.status(200).redirect("/");
 });
 
@@ -44,8 +48,9 @@ route.post(
     const token = setUser(user1);
     res.cookie("_session_token", token);
     console.log(req.user);
-    const redirectUrl = req.session.originalUrl;
-    // (actype === "admin" ? "/admin/users" : "listing");
+    const redirectUrl =
+      req.session.originalUrl ||
+      (actype === "admin" ? "/admin/users" : "/listings");
     return res.status(200).redirect(redirectUrl);
   })
 );
@@ -61,8 +66,9 @@ route.post(
     }
     const token = setUser(user);
     res.cookie("_session_token", token);
-    const redirectUrl = req.session.originalUrl;
-    // (user.role === "admin" ? "/admin/users" : "listing");
+    const redirectUrl =
+      req.session.originalUrl ||
+      (user.role === "admin" ? "/admin/users" : "/listings");
     res.status(200).redirect(redirectUrl);
   })
 );
