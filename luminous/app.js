@@ -24,16 +24,19 @@ app.set("views", path.join(__dirname, "views"));
 app.use(express.static(path.join(__dirname, "public")));
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
-app.set("trust proxy", 1); // trust first proxy
-app.use(
-  session({
-    secret: "keyboard cat",
-    resave: false,
-    saveUninitialized: true,
-    // cookie: { secure: true },
-  })
-);
+// session
+const sess = {
+  secret: process.env.SESSION_SECRET || "KEYBOARD & mE!",
+  resave: false,
+  saveUninitialized: true,
+  cookie: {},
+};
 
+if (app.get("env") === "production") {
+  app.set("trust proxy", 1); // trust first proxy
+  sess.cookie.secure = true; // serve secure cookies
+}
+app.use(session(sess));
 // database connection.
 connection();
 
