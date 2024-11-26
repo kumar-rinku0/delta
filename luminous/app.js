@@ -9,6 +9,7 @@ const connection = require("./utils/init.js");
 const listingRouter = require("./routes/listing.js");
 const userRouter = require("./routes/user.js");
 const adminRouter = require("./routes/admin.js");
+const { randomUUID } = require("crypto");
 const {
   onlyLoggedInUser,
   isAdmin,
@@ -27,6 +28,9 @@ app.use(cookieParser());
 // session
 const sess = {
   secret: process.env.SESSION_SECRET || "KEYBOARD & mE!",
+  genid: (req) => {
+    return randomUUID();
+  },
   resave: false,
   saveUninitialized: true,
   cookie: {},

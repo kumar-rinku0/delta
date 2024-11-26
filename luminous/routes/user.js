@@ -23,6 +23,7 @@ route.get("/signup", (req, res) => {
 // sign out requist
 route.get("/signout", (req, res) => {
   res.cookie("_session_token", null);
+  req.session.regenerate();
   return res.status(200).redirect("/");
 });
 
