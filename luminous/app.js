@@ -1,9 +1,12 @@
-require("dotenv").config();
+if (process.env.NODE_ENV != "development") {
+  require("dotenv").config();
+}
 
 const express = require("express");
 const path = require("path");
 const cookieParser = require("cookie-parser");
 const session = require("express-session");
+const flash = require("connect-flash");
 const ejsMate = require("ejs-mate");
 const connection = require("./utils/init.js");
 const listingRouter = require("./routes/listing.js");
@@ -26,27 +29,35 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 // session
-const sess = {
+const sessionOptions = {
   secret: process.env.SESSION_SECRET || "KEYBOARD & mE!",
   genid: (req) => {
     return randomUUID();
   },
   resave: false,
   saveUninitialized: true,
-  cookie: {},
+  cookie: {
+    expires: Date.now() + 7 * 24 * 60 * 60 * 1000,
+    maxAge: 7 * 24 * 60 * 60 * 1000,
+    httpOnly: true,
+  },
 };
 
-if (app.get("env") === "production") {
-  app.set("trust proxy", 1); // trust first proxy
-  sess.cookie.secure = true; // serve secure cookies
-}
-app.use(session(sess));
+app.set("trust proxy", 1);
+app.use(session(sessionOptions));
+app.use(flash());
 // database connection.
 connection();
 
 // root route
 app.get("/", (req, res) => {
   res.status(200).redirect("listings");
+});
+
+// flash middleware
+app.use((req, res, next) => {
+  res.locals.flash_success = req.flash("success");
+  return next();
 });
 
 // route middleware

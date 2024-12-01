@@ -6,7 +6,7 @@
         <div>created by <%= listingCreatedBy.username %>
         </div>
         <% } %>
-          <img class="listing-img" src="<%= listing.image %>" alt="image">
+          <img class="listing-img" src="<%= listing.image.url %>" alt="image">
           <div class="listing-content">
             <h4 class="listing-heading">
               <%= listing.title %>
@@ -20,30 +20,40 @@
           </div>
     </div>
     <% if(user && listing.createdBy.toString()===user._id.toString()) { %>
-      <div>
+      <div class="flex-gap">
         <form action="/listings/<%= listing._id %>/<%= listing.createdBy %>" method="post">
-          <button type="submit" class="btn">delete Listing</button>
+          <button type="submit" class="btn btn-danger">delete Listing</button>
         </form>
+        <button class="btn btn-secondary">
+          <a href="/listings/<%= listing._id %>/edit">
+            edit listing
+          </a>
+        </button>
       </div>
+
       <% } else { %>
-        <form action="/listings/<%= listing._id %>" method="post" class="listing-form">
-          <fieldset>
-            <legend>---stars---</legend>
-            <div class="listing-form-input-container">
-              <div class="listing-form-input">
-                <input type="radio" id="1" name="rating" value="1"> <label for="1">1</label>
-                <input type="radio" id="2" name="rating" value="2"> <label for="2">2</label>
-                <input type="radio" id="3" name="rating" value="3"> <label for="3">3</label>
-                <input type="radio" id="4" name="rating" value="4"> <label for="4">4</label>
-                <input type="radio" id="5" name="rating" value="5"> <label for="5">5</label>
-              </div>
-            </div>
-          </fieldset>
-          <div>
-            <textarea name="msg" id="msg" placeholder="your review is valuable for us!!"></textarea>
+        <form action="/listings/<%= listing._id %>" method="post" class="listing-form needs-validation" novalidate>
+          <div class="flex-justify">
+            <fieldset class="starability-grow">
+              <input type="radio" id="no-rate" class="input-no-rate" name="rating" value="1" checked
+                aria-label="No rating." />
+              <input type="radio" id="first-rate1" name="rating" value="1" />
+              <label for="first-rate1" title="Terrible">1 star</label>
+              <input type="radio" id="first-rate2" name="rating" value="2" />
+              <label for="first-rate2" title="Not good">2 stars</label>
+              <input type="radio" id="first-rate3" name="rating" value="3" />
+              <label for="first-rate3" title="Average">3 stars</label>
+              <input type="radio" id="first-rate4" name="rating" value="4" />
+              <label for="first-rate4" title="Very good">4 stars</label>
+              <input type="radio" id="first-rate5" name="rating" value="5" />
+              <label for="first-rate5" title="Amazing">5 stars</label>
+            </fieldset>
           </div>
           <div>
-            <button type="submit" class="btn">rate listing</button>
+            <input name="msg" id="msg" placeholder="feedback!" class="form-control">
+          </div>
+          <div class="flex-justify">
+            <button type="submit" class="btn btn-outline-secondary">rate listing</button>
           </div>
         </form>
         <% } %>
@@ -57,9 +67,9 @@
             <%= review.username %>
           </h3>
           <div>
-            <b>
-              <%= review.rating %> <span class="listing-star"> &#9734; </span>
-            </b>
+            <p class=" " data-rating="<%= review.rating %>">
+            <p class="starability-result" data-rating="<%= review.rating %>">
+            </p>
           </div>
           <div class="listing-description">
             <%= review.msg %>

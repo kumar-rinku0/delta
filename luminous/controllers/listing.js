@@ -57,16 +57,42 @@ const handleDeleteListing = async (req, res) => {
     throw new ExpressError(401, "Unauthorized pruning!!");
   }
   await Listing.findByIdAndDelete(id);
-  throw new ExpressError(200, "Listing pruned!!");
+  req.flash("success", "listing pruned!!");
+  return res.status(200).redirect("/listings");
 };
 
 const handleCreateLising = async (req, res) => {
   const { listing } = req.body;
+  const { filename, path: url } = req.file;
   let user = req.user;
   const newListing = new Listing(listing);
+  newListing.image = { filename, url };
   newListing.createdBy = user._id;
   await newListing.save();
-  res.status(200).redirect("/listings");
+  req.flash("success", "listing saved!");
+  res.status(200).redirect(`/listings/${listing._id}`);
+};
+
+const handleUpdateLising = async (req, res) => {
+  let user = req.user;
+  const { listing } = req.body;
+  console.log(req.file);
+  const filename = req?.file?.filename;
+  const url = req?.file?.path;
+  const { id } = req.params;
+  if (id.length != 24) {
+    req.flash("success", "invalid listing info!!");
+    return res.redirect(`/listings/user/${user.username}`);
+  }
+  const newListing = await Listing.findById(id);
+  newListing.title = listing.title;
+  newListing.description = listing.description;
+  newListing.location = listing.location;
+  newListing.country = listing.country;
+  newListing.image = filename && url ? { filename, url } : newListing.image;
+  await newListing.save();
+  req.flash("success", "listing updated!");
+  return res.status(200).redirect("/listings");
 };
 
 const handleReadUsernameListing = async (req, res) => {
@@ -114,5 +140,6 @@ module.exports = {
   handleDeleteListing,
   handleReadUsernameListing,
   handleCreateLising,
+  handleUpdateLising,
   handleReadListing,
 };

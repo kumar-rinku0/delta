@@ -11,9 +11,12 @@
   <header>
     <%- partial("navbar", { user }); %>
   </header>
-  <section>
-    <%- body -%>
-  </section>
+  <% if(flash_success) { %>
+    <%- partial("flash", {flash_success}) %>
+      <% } %>
+        <section>
+          <%- body -%>
+        </section>
 </body>
 
 </html>

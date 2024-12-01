@@ -1,5 +1,5 @@
 <%- layout("partials/boilerplate", { title, user }); %>
-  <div class="container">
+  <div class="container-card">
     <% if(!listings.length) { %>
       <div class="error-container">
         <h3 class="error-message">
@@ -16,7 +16,7 @@
         <% for(listing of listings) { %>
           <div class="my-card">
             <a href="/listings/<%= listing._id %>">
-              <img class="listings-img" src="<%= listing.image %>" alt="image">
+              <img class="listings-img" src="<%= listing.image.url %>" alt="image">
               <div>
                 <div>
                   <%= listing.title %>
