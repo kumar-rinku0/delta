@@ -1,26 +1,27 @@
 <%- layout("partials/boilerplate", {title, user}); %>
   <div class="form-container">
-    <form action="/user/signup" method="post" class="form">
+    <form action="/user/signup" method="post" class="form needs-validation" novalidate>
       <div>
-        <label for="username">Username</label><input type="text" name="username" id="username" placeholder="@username"
-          required>
+        <label for="username" class="form-label">Username</label><input class="form-control" type="text" name="username"
+          id="username" placeholder="@username" required>
       </div>
       <div>
-        <label for="email"></label>Email<input type="email" name="email" id="email" placeholder="@mail.com" required>
+        <label for="email" class="form-label"></label>Email<input class="form-control" type="email" name="email"
+          id="email" placeholder="@mail.com" required>
       </div>
       <div>
-        <label for="password"></label>Password<input type="text" name="password" id="password" placeholder="pa*s**d"
-          required>
+        <label for="password" class="form-label"></label>Password<input class="form-control" type="text" name="password"
+          id="password" placeholder="pa*s**d" required>
       </div>
       <div>
-        <button type="submit" class="btn">Sign UP</button>
+        <button type="submit" class="btn btn-outline-secondary">Sign UP</button>
       </div>
       <div class="listing-form-input-container position-fix">
-        <div class="listing-form-input">
-          <input type="radio" name="actype" id="local" value="local" checked />
-          <label for="local">local</label>
-          <input type="radio" name="actype" id="admin" value="admin" />
-          <label for="admin">admin</label>
+        <div class="listing-form-input text-lg">
+          <input type="radio" name="actype" id="local" value="local" class="form-check-input" checked />
+          <label for="local" class="form-check-label"><b>local</b></label>
+          <input type="radio" name="actype" id="admin" class="form-check-input" value="admin" />
+          <label for="admin" class="form-check-label"><b>admin</b></label>
         </div>
       </div>
     </form>

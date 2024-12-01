@@ -1,0 +1,39 @@
+<%- layout("partials/boilerplate", {title, user}); %>
+
+  <div class="form-container">
+    <form action="/listings/<%= listing._id %>/edit" method="post" class="form needs-validation" novalidate
+      enctype="multipart/form-data">
+      <label class="form-label" for="title">Title*</label>
+      <input class="form-control" type="text" id="title" name="listing[title]" placeholder="Title" required
+        value="<%= listing.title %>">
+      <label class="form-label" for="description">Description*</label>
+      <input class="form-control" type="text" id="description" name="listing[description]" placeholder="Description"
+        required value="<%= listing.description %>">
+      <label class="form-label" for="price">Price*</label>
+      <input class="form-control" type="number" id="price" name="listing[price]" placeholder="Price" required
+        value="<%= listing.price %>">
+      <label class="form-label" for="location">Location*</label>
+      <input class="form-control" type="text" id="location" name="listing[location]" placeholder="Location" required
+        value="<%= listing.location %>">
+      <label class="form-label" for="country">Country*</label>
+      <input class="form-control" type="text" id="country" name="listing[country]" placeholder="Country" required
+        value="<%= listing.country %>">
+      <div class="flex-gap">
+        <label class="form-label" for="image">Old Image Preview!! &#10148;</label>
+        <img src="<%=imageUrl %>" alt="old img">
+      </div>
+      <label class="form-label" for="image">Upload New Image</label>
+      <input class="form-control" type="file" name="listing[image]" id="image" placeholder="add image!!">
+      <div class="form-check">
+        <input class="form-check-input text-sm" type="checkbox" value="" id="invalidCheck" required>
+        <label class="form-check-label text-sm" for="invalidCheck">
+          Agree to terms and conditions
+        </label>
+        <div class="invalid-feedback text-sm">
+          You must agree before submitting.
+        </div>
+      </div>
+      <button type="submit" class="btn btn-secondary">Add Listing!</button>
+    </form>
+    <script src="/js/script.js"></script>
+  </div>

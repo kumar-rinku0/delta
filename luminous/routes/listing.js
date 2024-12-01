@@ -11,7 +11,11 @@ const {
   handleCreateLising,
   handleReadUsernameListing,
   handleReadListing,
+  handleUpdateLising,
 } = require("../controllers/listing.js");
+const multer = require("multer");
+const { storage } = require("../utils/cloud-init");
+const upload = multer({ storage: storage });
 
 const route = Router();
 
@@ -30,9 +34,11 @@ route.get(
   })
 );
 
-route.get("/new", onlyLoggedInUser, (req, res) => {
+route.get("/create", onlyLoggedInUser, (req, res) => {
   let user = req.user;
-  res.status(200).render("newListing.ejs", { title: "new listing...", user });
+  res
+    .status(200)
+    .render("create-listing.ejs", { title: "new listing...", user });
 });
 
 route.get(
@@ -41,11 +47,40 @@ route.get(
   wrapAsync(handleReadUsernameListing)
 );
 
-route.post("/new", onlyLoggedInUser, wrapAsync(handleCreateLising));
+// creating new listing
+route.post(
+  "/create",
+  onlyLoggedInUser,
+  upload.single("listing[image]"),
+  wrapAsync(handleCreateLising)
+);
+
 // unprotected route.
-route.get("/:id", wrapAsync(handleReadListing));
-// post req. for review model
-route.post("/:id", onlyLoggedInUser, wrapAsync(handlePostReview));
+route
+  .route("/:id")
+  .get(wrapAsync(handleReadListing))
+  .post(onlyLoggedInUser, wrapAsync(handlePostReview));
+
+route
+  .route("/:id/edit")
+  .get(onlyLoggedInUser, async (req, res) => {
+    let user = req.user;
+    const { id } = req.params;
+    const listing = await Listing.findById(id);
+    const imageUrl = listing.image.url.replace("/upload", "/upload/w_200");
+    res.status(200).render("edit-listing.ejs", {
+      title: "edit listing...",
+      user,
+      listing,
+      imageUrl,
+    });
+  })
+  .post(
+    onlyLoggedInUser,
+    upload.single("listing[image]"),
+    wrapAsync(handleUpdateLising)
+  );
+
 // post route for deleting listing.
 route.post("/:id/:createdBy", onlyLoggedInUser, wrapAsync(handleDeleteListing));
 

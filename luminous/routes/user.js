@@ -48,6 +48,7 @@ route.post(
     const token = setUser(user1);
     res.cookie("_session_token", token);
     console.log(req.user);
+    req.flash("success", `hey!! ${username} welcome to luminous!`);
     const redirectUrl =
       req.session.originalUrl ||
       (actype === "admin" ? "/admin/users" : "/listings");
@@ -66,6 +67,7 @@ route.post(
     }
     const token = setUser(user);
     res.cookie("_session_token", token);
+    req.flash("success", `hey!! ${username} welcome to luminous!`);
     const redirectUrl =
       req.session.originalUrl ||
       (user.role === "admin" ? "/admin/users" : "/listings");
