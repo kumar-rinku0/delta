@@ -14,7 +14,6 @@
     "nodemon": "^3.1.7"
   },
   "dependencies": {
-    "cloudinary": "^2.5.1",
     "connect-flash": "^0.1.1",
     "cookie-parser": "^1.4.7",
     "dotenv": "^16.4.5",

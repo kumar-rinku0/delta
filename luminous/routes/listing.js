@@ -14,8 +14,8 @@ const {
   handleUpdateLising,
 } = require("../controllers/listing.js");
 const multer = require("multer");
-const { storage } = require("../utils/cloud-init");
-const upload = multer({ storage: storage });
+const { cloudUpload, multerStorage } = require("../utils/cloud-init");
+const upload = multer({ storage: multerStorage });
 
 const route = Router();
 

@@ -2,6 +2,7 @@ const Listing = require("../models/listing");
 const Review = require("../models/review");
 const User = require("../models/user");
 const ExpressError = require("../utils/express-error");
+const { cloudUpload, multerStorage } = require("../utils/cloud-init");
 
 // post review
 const handlePostReview = async (req, res) => {
@@ -63,6 +64,7 @@ const handleDeleteListing = async (req, res) => {
 
 const handleCreateLising = async (req, res) => {
   const { listing } = req.body;
+  console.log(req.file);
   const { filename, path: url } = req.file;
   let user = req.user;
   const newListing = new Listing(listing);
@@ -70,7 +72,7 @@ const handleCreateLising = async (req, res) => {
   newListing.createdBy = user._id;
   await newListing.save();
   req.flash("success", "listing saved!");
-  res.status(200).redirect(`/listings/${listing._id}`);
+  res.status(200).redirect(`/listings/${newListing._id}`);
 };
 
 const handleUpdateLising = async (req, res) => {

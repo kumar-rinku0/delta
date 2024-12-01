@@ -1,5 +1,7 @@
 const cloudinary = require("cloudinary").v2;
 const { CloudinaryStorage } = require("multer-storage-cloudinary");
+const multer = require("multer");
+const { randomUUID } = require("crypto");
 
 // (async function () {
 // Configuration
@@ -9,7 +11,17 @@ cloudinary.config({
   api_secret: process.env.CLOUD_API_SECRET, // Click 'View API Keys' above to copy your API secret
 });
 
-const storage = new CloudinaryStorage({
+// const multerStorage = multer.diskStorage({
+//   destination: function (req, file, cb) {
+//     cb(null, "./public/uploads");
+//   },
+//   filename: function (req, file, cb) {
+//     const filename = `${randomUUID()}`;
+//     cb(null, filename);
+//   },
+// });
+
+const multerStorage = new CloudinaryStorage({
   cloudinary: cloudinary,
   params: {
     folder: "LUMINOUS_DEV",
@@ -18,15 +30,18 @@ const storage = new CloudinaryStorage({
 });
 
 // Upload an image
-//  const uploadResult = await cloudinary.uploader
-//    .upload(
-//        'https://res.cloudinary.com/demo/image/upload/getting-started/shoes.jpg', {
-//            public_id: 'shoes',
-//        }
-//    )
-//    .catch((error) => {
-//        console.log(error);
-//    });
+const cloudUpload = (imgPath) => {
+  cloudinary.uploader
+    .upload(imgPath, {
+      public_id: "LUMINOUS",
+    })
+    .then((res) => {
+      return res;
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+};
 
 // console.log(uploadResult);
 
@@ -50,5 +65,6 @@ const storage = new CloudinaryStorage({
 // })();
 
 module.exports = {
-  storage,
+  cloudUpload,
+  multerStorage,
 };
