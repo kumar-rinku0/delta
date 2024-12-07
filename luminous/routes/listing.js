@@ -14,7 +14,7 @@ const {
   handleUpdateLising,
 } = require("../controllers/listing.js");
 const multer = require("multer");
-const { cloudUpload, multerStorage } = require("../utils/cloud-init");
+const { multerStorage } = require("../utils/cloud-init");
 const upload = multer({ storage: multerStorage });
 
 const route = Router();
@@ -25,7 +25,7 @@ route.get(
   wrapAsync(async (req, res) => {
     let user = req.user || null;
     let listings = await Listing.find({}).sort({ createdAt: -1 });
-    res.status(200).render("listings.ejs", {
+    res.status(200).send({
       listings,
       myListings: false,
       user,
@@ -36,9 +36,8 @@ route.get(
 
 route.get("/create", onlyLoggedInUser, (req, res) => {
   let user = req.user;
-  res
-    .status(200)
-    .render("create-listing.ejs", { title: "new listing...", user });
+  res.status(200);
+  send({ title: "new listing...", user });
 });
 
 route.get(
@@ -68,7 +67,7 @@ route
     const { id } = req.params;
     const listing = await Listing.findById(id);
     const imageUrl = listing.image.url.replace("/upload", "/upload/w_200");
-    res.status(200).render("edit-listing.ejs", {
+    res.status(200).send({
       title: "edit listing...",
       user,
       listing,

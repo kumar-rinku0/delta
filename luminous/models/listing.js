@@ -17,12 +17,24 @@ const listingSchema = new Schema(
       min: [0, "Price can't be negetive!"],
     },
     location: {
-      type: String,
-      required: true,
-    },
-    country: {
-      type: String,
-      required: true,
+      value: {
+        type: String,
+      },
+      geometry: {
+        type: {
+          type: String, // Don't do `{ location: { type: String } }`
+          enum: ["Point"], // 'location.type' must be 'Point'
+          required: true,
+        },
+        coordinates: {
+          type: [Number],
+          required: true,
+        },
+      },
+      country: {
+        type: String,
+        required: true,
+      },
     },
     image: {
       url: {

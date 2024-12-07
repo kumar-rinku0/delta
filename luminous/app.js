@@ -3,16 +3,20 @@ if (process.env.NODE_ENV != "development") {
 }
 
 const express = require("express");
-const path = require("path");
+const { randomUUID } = require("crypto");
 const cookieParser = require("cookie-parser");
 const session = require("express-session");
 const flash = require("connect-flash");
-const ejsMate = require("ejs-mate");
+
+// database connection
 const connection = require("./utils/init.js");
+
+// routers
 const listingRouter = require("./routes/listing.js");
 const userRouter = require("./routes/user.js");
+
+// middlewares
 const adminRouter = require("./routes/admin.js");
-const { randomUUID } = require("crypto");
 const {
   onlyLoggedInUser,
   isAdmin,
@@ -21,12 +25,8 @@ const {
 
 const app = express();
 const PORT = process.env.PORT || 8000;
-
-app.engine("ejs", ejsMate);
-app.set("view engine", "ejs");
-app.set("views", path.join(__dirname, "views"));
-app.use(express.static(path.join(__dirname, "public")));
 app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 app.use(cookieParser());
 // session
 const sessionOptions = {
@@ -50,9 +50,9 @@ app.use(flash());
 connection();
 
 // root route
-app.get("/", (req, res) => {
-  res.status(200).redirect("listings");
-});
+// app.get("/", (req, res) => {
+//   res.status(200).redirect("listings");
+// });
 
 // flash middleware
 app.use((req, res, next) => {
@@ -61,22 +61,18 @@ app.use((req, res, next) => {
 });
 
 // route middleware
-app.use("/user", userRouter);
-app.use("/listings", isLoggedInCheck, listingRouter);
-app.use("/admin", onlyLoggedInUser, isAdmin, adminRouter);
+app.use("/api/user", userRouter);
+app.use("/api/listings", isLoggedInCheck, listingRouter);
+app.use("/api/admin", onlyLoggedInUser, isAdmin, adminRouter);
 
 // err middleware
 app.use((err, req, res, next) => {
   const { status = 500, message } = err;
   let user = req.user;
   if (!user) {
-    res
-      .status(status)
-      .render("error.ejs", { message, title: `${status} !!`, user: null });
+    res.status(status).send({ message, status: status, user: null });
   }
-  res
-    .status(status)
-    .render("error.ejs", { message, title: `${status} !!`, user });
+  res.status(status).render({ message, status: status, user });
 });
 
 app.listen(PORT, () => {

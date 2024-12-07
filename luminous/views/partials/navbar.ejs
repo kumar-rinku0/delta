@@ -59,14 +59,14 @@
                   <a href="/listings/create">
                     <li>
                       <i class="fa-solid fa-circle-plus"></i>
-                      create new
+                      create
                     </li>
                   </a>
                   <% } %>
                     <a href="/listings">
                       <li>
                         <i class="fa-solid fa-lines-leaning"></i>
-                        listings
+                        explore
                       </li>
                     </a>
         </ul>
@@ -95,10 +95,10 @@
         <% if(user.role=="admin" ) { %>
           <a href="/admin/users">users</a>
           <% } %>
-            <a href="/listings/create">create new</a>
 
             <% } %>
-              <a href="/listings">listings</a>
+              <a href="/listings/create">create</a>
+              <a href="/listings">explore</a>
   </div>
 
 </nav>

@@ -9,7 +9,7 @@ const route = Router();
 route.get("/users", async (req, res) => {
   let user = req.user;
   const allUsers = await User.find({ role: "local" });
-  res.status(200).render("users.ejs", {
+  res.status(200).send({
     user,
     allUsers,
     title: "users created yet!",

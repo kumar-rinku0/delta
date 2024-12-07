@@ -27,6 +27,7 @@
   top: 0;
   left: -220px;
   transition: all 0.2s linear;
+  z-index: 10;
 }
 
 .logo {
@@ -62,6 +63,11 @@
   padding-right: 4px;
 }
 
+ul {
+  list-style-type: none;
+  padding-left: 0;
+}
+
 .social_media ul {
   position: absolute;
   bottom: 50px;
@@ -90,4 +96,36 @@
 
 #check:checked ~ .btn_one i {
   opacity: 0;
+}
+
+/* map style */
+
+.listing-map {
+  width: 100%;
+  height: 50vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#map {
+ width: 20rem;
+ height: 40vh;
+}
+
+@media (min-width: 720px) {
+  #map {
+    width: 40rem;
+    height: 35vh;
+   }
+  .listing-map {
+    height: 60vh;
+  }
+}
+
+@media (min-width: 1200px) {
+  #map {
+    width: 60rem;
+    height: 50vh;
+   }
 }

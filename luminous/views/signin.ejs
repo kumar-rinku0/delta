@@ -1,13 +1,13 @@
 <%- layout("partials/boilerplate", {title, user}); %>
   <div class="form-container">
-    <form action="/user/signin" method="post" class="form">
+    <form action="/user/signin" method="post" class="form needs-validation" novalidate>
       <div>
-        <label for="username" class="form-label">Username</label><input class="form-control" type="text" name="username"
-          id="username" placeholder="@username" required>
+        <label for="username" class="form-label">Username</label>
+        <input class="form-control" type="text" name="username" id="username" placeholder="@username" required>
       </div>
       <div>
-        <label for="password" class="form-label"></label>Password<input class="form-control" type="password"
-          name="password" id="password" placeholder="pa*s**d" required>
+        <label for="password" class="form-label">Password</label>
+        <input class="form-control" type="password" name="password" id="password" placeholder="pa*s**d" required>
       </div>
       <div>
         <button type="submit" class="btn btn-outline-secondary">Sign IN</button>
@@ -16,4 +16,5 @@
     <div>
       don't have an account? <a href="/user/signup"> sign up </a>
     </div>
+    <script src="/js/script.js"></script>
   </div>

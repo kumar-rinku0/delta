@@ -11,9 +11,11 @@
       <label class="form-label" for="price">Price*</label>
       <input class="form-control" type="number" id="price" name="listing[price]" placeholder="Price" required>
       <label class="form-label" for="location">Location*</label>
-      <input class="form-control" type="text" id="location" name="listing[location]" placeholder="Location" required>
+      <input class="form-control" type="text" id="location" name="listing[location][value]" placeholder="Location"
+        required>
       <label class="form-label" for="country">Country*</label>
-      <input class="form-control" type="text" id="country" name="listing[country]" placeholder="Country" required>
+      <input class="form-control" type="text" id="country" name="listing[location][country]" placeholder="Country"
+        required>
       <label class="form-label" for="image">Upload img*</label>
       <input class="form-control" type="file" name="listing[image]" id="image" placeholder="add image!!" required>
       <div class="form-check">

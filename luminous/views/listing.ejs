@@ -49,11 +49,13 @@
               <label for="first-rate5" title="Amazing">5 stars</label>
             </fieldset>
           </div>
-          <div>
-            <input name="msg" id="msg" placeholder="feedback!" class="form-control">
-          </div>
-          <div class="flex-justify">
-            <button type="submit" class="btn btn-outline-secondary">rate listing</button>
+          <div class="flex-gap flex-direction">
+            <div class="flex-justify flex-gap">
+              <input name="msg" id="msg" placeholder="feedback!" class="form-control">
+            </div>
+            <div class="flex-justify">
+              <button type="submit" class="btn btn-outline-secondary">rate listing</button>
+            </div>
           </div>
         </form>
         <% } %>
@@ -78,3 +80,11 @@
         <% } %>
           <% } %>
   </div>
+  <script>
+    const accessToken = "<%= accessToken %>"
+    const coordinates = "<%= listing.location.geometry.coordinates %>";
+  </script>
+  <div class="listing-map">
+    <div id="map"></div>
+  </div>
+  <script src="/js/map.js"></script>

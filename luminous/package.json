@@ -14,11 +14,10 @@
     "nodemon": "^3.1.7"
   },
   "dependencies": {
+    "@mapbox/mapbox-sdk": "^0.16.1",
     "connect-flash": "^0.1.1",
     "cookie-parser": "^1.4.7",
     "dotenv": "^16.4.5",
-    "ejs": "^3.1.10",
-    "ejs-mate": "^4.0.0",
     "express": "^4.21.1",
     "express-session": "^1.18.1",
     "jsonwebtoken": "^9.0.2",
