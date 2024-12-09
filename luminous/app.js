@@ -3,10 +3,11 @@ if (process.env.NODE_ENV != "development") {
 }
 
 const express = require("express");
+const path = require("path");
 const { randomUUID } = require("crypto");
 const cookieParser = require("cookie-parser");
 const session = require("express-session");
-const flash = require("connect-flash");
+const MongoStore = require("connect-mongo");
 
 // database connection
 const connection = require("./utils/init.js");
@@ -21,16 +22,35 @@ const {
   onlyLoggedInUser,
   isAdmin,
   isLoggedInCheck,
+  setFlash,
 } = require("./middlewares/auth.js");
 
 const app = express();
 const PORT = process.env.PORT || 8000;
-app.use(express.urlencoded({ extended: true }));
+const SECRET = process.env.SESSION_SECRET || "KEYBOARD & mE!";
+
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
+
 // session
+const MONGO_URI = process.env.MONGO_URI;
+const store = MongoStore.create({
+  mongoUrl: MONGO_URI,
+  touchAfter: 24 * 3600,
+  crypto: {
+    secret: SECRET,
+  },
+  ttl: 7 * 24 * 60 * 60,
+});
+
+store.on("error", (err) => {
+  console.log("ERROR WHILE STORING SESSIONS!", err);
+});
+
 const sessionOptions = {
-  secret: process.env.SESSION_SECRET || "KEYBOARD & mE!",
+  store,
+  secret: SECRET,
   genid: (req) => {
     return randomUUID();
   },
@@ -45,19 +65,17 @@ const sessionOptions = {
 
 app.set("trust proxy", 1);
 app.use(session(sessionOptions));
-app.use(flash());
+
 // database connection.
 connection();
 
 // root route
-// app.get("/", (req, res) => {
-//   res.status(200).redirect("listings");
-// });
-
-// flash middleware
-app.use((req, res, next) => {
-  res.locals.flash_success = req.flash("success");
-  return next();
+app.get("/api", isLoggedInCheck, (req, res) => {
+  const user = req.user;
+  if (!user) {
+    return res.status(200).send({ user: null });
+  }
+  return res.status(200).send({ user: user });
 });
 
 // route middleware
@@ -67,12 +85,13 @@ app.use("/api/admin", onlyLoggedInUser, isAdmin, adminRouter);
 
 // err middleware
 app.use((err, req, res, next) => {
+  console.log(err);
   const { status = 500, message } = err;
   let user = req.user;
   if (!user) {
     res.status(status).send({ message, status: status, user: null });
   }
-  res.status(status).render({ message, status: status, user });
+  res.status(status).send({ message, status: status, user });
 });
 
 app.listen(PORT, () => {

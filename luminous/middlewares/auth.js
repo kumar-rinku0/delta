@@ -16,11 +16,11 @@ const onlyLoggedInUser = (req, res, next) => {
     req.user = user;
   }
   if (!user && !req?.baseUrl) {
-    res.redirect("/user/signin");
+    return res.redirect("/user/signin");
   }
   if (!user) {
     // throw new ExpressError(401, "session expired. login again!!");
-    res.redirect("/user/signin");
+    return res.redirect("/user/signin");
   }
   if (user.status !== "active") {
     throw new ExpressError(401, "unauthorized req. or blocked by admin!!");
@@ -36,8 +36,16 @@ const isAdmin = (req, res, next) => {
   return next();
 };
 
+// flash middleware
+const setFlash = (req, res, next) => {
+  res.locals.flash_success = req.flash("success");
+  res.locals.flash_error = req.flash("error");
+  return next();
+};
+
 module.exports = {
   isLoggedInCheck,
   onlyLoggedInUser,
   isAdmin,
+  setFlash,
 };

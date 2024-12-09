@@ -11,8 +11,8 @@
   <header>
     <%- partial("navbar", { user }); %>
   </header>
-  <% if(flash_success) { %>
-    <%- partial("flash", {flash_success}) %>
+  <% if(flash_success || flash_error) { %>
+    <%- partial("flash", {flash_success, flash_error}) %>
       <% } %>
         <section>
           <%- body -%>

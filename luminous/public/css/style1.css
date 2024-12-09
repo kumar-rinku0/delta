@@ -1,7 +1,6 @@
 * {
   padding: 0;
   margin: 0;
-  font-family: "Poppins", sans-serif;
   font-weight: 400;
   font-style: normal;
   /* overflow: hidden; */
@@ -10,6 +9,7 @@
 body {
   overflow-x:hidden;
   overflow-y: scroll;
+  font-family: "Poppins", sans-serif !important;
 }
 
 .heading {
@@ -75,6 +75,20 @@ body {
   padding: 1rem;
 }
 
+.my-card a {
+  text-decoration: none;
+  color: #212121;
+}
+
+.my-card:hover {
+  transform: scale(1.02);
+}
+
+.flex-justify-between {
+  display: flex;
+  justify-content: space-between;
+}
+
 .listings-img {
   width: 20rem;
   height: 15rem;
@@ -91,16 +105,12 @@ body {
 .listing-container {
   height: 75vh;
   display: flex ;
-  justify-content: center;
+  justify-content: space-around;
   align-items: center;
   flex-direction: column;
   gap: 0.5rem ;
 }
 
-
-.my-card a {
-  text-decoration: none;
-}
 
 .logo-icon {
   text-decoration: none;
@@ -146,19 +156,15 @@ section, header {
 }
 
 .form-control {
-  width: 80%;
-}
-
-.feedback .form-control {
-  width: 80%;
+  width: 90%;
 }
 
 .form-container {
-  width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  padding: 1rem;
 }
 
 .form {
@@ -257,6 +263,8 @@ fieldset {
 
 .listing-review {
   display: flex;
+  justify-content: center;
+  align-items: center;
   flex-wrap: wrap;
   gap: 0.5rem;
   padding: 1rem;
@@ -277,6 +285,35 @@ fieldset {
 
 .position-fix input {
   margin: 0;
+}
+
+.opacity-0 {
+  opacity: 0;
+}
+
+.red {
+  color: red;
+}
+.green {
+  color: green;
+}
+
+.flash {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  height: 4rem;
+}
+
+.account {
+  display: flex;  
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.hidden {
+  display: none;
 }
 
 
@@ -300,6 +337,16 @@ fieldset {
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
+  }
+
+  .account-page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 70vh;
+  }
+  .account {
+    width: 25rem;
   }
   
   .desktop {

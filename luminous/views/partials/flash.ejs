@@ -1,5 +1,13 @@
 <% if(flash_success && flash_success.length) { %>
-  <div class="alert alert-primary" role="alert">
+  <div class="flash">
+    <i class="fa-solid fa-check green"></i>
     <%= flash_success %>
   </div>
   <% } %>
+
+    <% if(flash_error && flash_error.length) { %>
+      <div class="flash">
+        <i class="fa-solid fa-exclamation red"></i>
+        <%= flash_error %>
+      </div>
+      <% } %>

@@ -113,6 +113,18 @@ ul {
  height: 40vh;
 }
 
+/* map popup */
+
+.map-popup {
+  width: 20rem;
+  height: 10vh;
+  outline: none;
+}
+
+.map-popup:focus, .map-popup:focus-visible, .map-popup:focus-within {
+  outline: none;
+}
+
 @media (min-width: 720px) {
   #map {
     width: 40rem;

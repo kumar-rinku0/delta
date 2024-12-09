@@ -35,7 +35,7 @@
         <form action="/listings/<%= listing._id %>" method="post" class="listing-form needs-validation" novalidate>
           <div class="flex-justify">
             <fieldset class="starability-grow">
-              <input type="radio" id="no-rate" class="input-no-rate" name="rating" value="1" checked
+              <input type="radio" id="no-rate" class="input-no-rate" name="rating" value="0" checked
                 aria-label="No rating." />
               <input type="radio" id="first-rate1" name="rating" value="1" />
               <label for="first-rate1" title="Terrible">1 star</label>
@@ -58,6 +58,7 @@
             </div>
           </div>
         </form>
+        <script src="/js/script.js"></script>
         <% } %>
   </div>
 
@@ -65,9 +66,9 @@
     <% if(listing.reviews.length) { %>
       <% for(let review of listing.reviews) { %>
         <div class="review-card">
-          <h3>
-            <%= review.username %>
-          </h3>
+          <h5>
+            @ <%= review.username %>
+          </h5>
           <div>
             <p class=" " data-rating="<%= review.rating %>">
             <p class="starability-result" data-rating="<%= review.rating %>">
@@ -83,6 +84,7 @@
   <script>
     const accessToken = "<%= accessToken %>"
     const coordinates = "<%= listing.location.geometry.coordinates %>";
+    const locationValue = "<%= listing.location.value %>"
   </script>
   <div class="listing-map">
     <div id="map"></div>

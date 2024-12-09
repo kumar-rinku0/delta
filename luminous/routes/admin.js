@@ -9,7 +9,7 @@ const route = Router();
 route.get("/users", async (req, res) => {
   let user = req.user;
   const allUsers = await User.find({ role: "local" });
-  res.status(200).send({
+  return res.status(200).render("users.ejs", {
     user,
     allUsers,
     title: "users created yet!",
@@ -23,7 +23,7 @@ route.post(
     const user = await User.findById(userId);
     user.status = user.status === "active" ? "inactive" : "active";
     await user.save();
-    res.redirect("/admin/users");
+    return res.redirect("/admin/users");
   })
 );
 

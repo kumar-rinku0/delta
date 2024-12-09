@@ -13,13 +13,13 @@
       <input class="form-control" type="number" id="price" name="listing[price]" placeholder="Price" required
         value="<%= listing.price %>">
       <label class="form-label" for="location">Location*</label>
-      <input class="form-control" type="text" id="location" name="listing[location]" placeholder="Location" required
-        value="<%= listing.location %>">
+      <input class="form-control" type="text" id="location" name="listing[location][value]" placeholder="Location"
+        required value="<%= listing.location.value %>">
       <label class="form-label" for="country">Country*</label>
-      <input class="form-control" type="text" id="country" name="listing[country]" placeholder="Country" required
-        value="<%= listing.country %>">
+      <input class="form-control" type="text" id="country" name="listing[location][country]" placeholder="Country"
+        required value="<%= listing.location.country %>">
       <div class="flex-gap">
-        <label class="form-label" for="image">Old Image Preview!! &#10148;</label>
+        <label class="form-label" for="image">Old Image Preview &nbsp;&#10148;</label>
         <img src="<%=imageUrl %>" alt="old img">
       </div>
       <label class="form-label" for="image">Upload New Image</label>
@@ -27,13 +27,13 @@
       <div class="form-check">
         <input class="form-check-input text-sm" type="checkbox" value="" id="invalidCheck" required>
         <label class="form-check-label text-sm" for="invalidCheck">
-          Agree to terms and conditions
+          Are you providing vailid and correct info?
         </label>
         <div class="invalid-feedback text-sm">
-          You must agree before submitting.
+          You must agree before submitting listing!
         </div>
       </div>
-      <button type="submit" class="btn btn-secondary">Add Listing!</button>
+      <button type="submit" class="btn btn-secondary">Add Changes!</button>
     </form>
     <script src="/js/script.js"></script>
   </div>

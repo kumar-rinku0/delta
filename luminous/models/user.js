@@ -1,13 +1,16 @@
 const { Schema, model } = require("mongoose");
+const Listing = require("./listing");
 const { randomBytes, createHmac } = require("crypto");
-const Listing = require("./listing.js");
 
 const userSchema = new Schema(
   {
     username: {
       type: String,
       required: true,
-      unique: true,
+      unique: {
+        value: true,
+        message: "username already taken!",
+      },
       lowercase: true,
       trim: true,
     },
@@ -59,7 +62,6 @@ userSchema.pre("save", async function (next) {
   }
   next();
 });
-
 // Method to compare passwords during login
 userSchema.static("isRightUser", async (username, password) => {
   const user = await User.findOne({ username });
@@ -77,14 +79,10 @@ userSchema.static("isRightUser", async (username, password) => {
   return user;
 });
 
-userSchema.post("findOneAndDelete", async (user) => {
-  const result = await Listing.deleteMany({ createdBy: user._id });
-  console.log(result);
-});
-
-userSchema.pre("deleteMany", async () => {
-  const result = await Listing.deleteMany({});
-  console.log(result);
+userSchema.static("deleteUser", async (id) => {
+  await Listing.deleteMany({ createdBy: id });
+  const user = await User.findByIdAndDelete(id);
+  return user;
 });
 
 const User = model("User", userSchema);

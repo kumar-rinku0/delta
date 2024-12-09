@@ -34,7 +34,7 @@
               </li>
             </a>
             <% } else { %>
-              <a href="/listings/user/<%= user.username %>">
+              <a href="/user/account">
                 <li>
                   <i class="fa-solid fa-user"></i>
 
@@ -48,6 +48,12 @@
                   sign out
                 </li>
               </a>
+              <a href="/listings/user/<%= user.username %>">
+                <li>
+                  <i class="fa-solid fa-gear"></i>
+                  my listings
+                </li>
+              </a>
               <% if(user.role=="admin" ) { %>
                 <a href="/admin/users">
                   <li>
@@ -56,13 +62,13 @@
                   </li>
                 </a>
                 <% }%>
-                  <a href="/listings/create">
-                    <li>
-                      <i class="fa-solid fa-circle-plus"></i>
-                      create
-                    </li>
-                  </a>
                   <% } %>
+                    <a href="/listings/create">
+                      <li>
+                        <i class="fa-solid fa-circle-plus"></i>
+                        create
+                      </li>
+                    </a>
                     <a href="/listings">
                       <li>
                         <i class="fa-solid fa-lines-leaning"></i>
@@ -89,9 +95,10 @@
       <a href="/user/signup">sign up</a>
       <% } else { %>
         <a href="/user/signout">sign out</a>
-        <a href="/listings/user/<%= user.username %>">
+        <a href="/user/account">
           <%= user.username %>
         </a>
+        <a href="/listings/user/<%= user.username %>">my listings</a>
         <% if(user.role=="admin" ) { %>
           <a href="/admin/users">users</a>
           <% } %>
