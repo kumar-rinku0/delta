@@ -8,6 +8,7 @@ const { randomUUID } = require("crypto");
 const cookieParser = require("cookie-parser");
 const session = require("express-session");
 const MongoStore = require("connect-mongo");
+const cors = require("cors");
 
 // database connection
 const connection = require("./utils/init.js");
@@ -62,9 +63,14 @@ const sessionOptions = {
     httpOnly: true,
   },
 };
+const corsOp = {
+  origin: "https://sentinel-1.vercel.app",
+  optionsSuccessStatus: 200,
+};
 
 app.set("trust proxy", 1);
 app.use(session(sessionOptions));
+app.use(cors(corsOp));
 
 // database connection.
 connection();
