@@ -68,9 +68,10 @@ app.use(session(sessionOptions));
 
 // database connection.
 connection();
+app.use(isLoggedInCheck);
 
 // root route
-app.get("/api", isLoggedInCheck, (req, res) => {
+app.get("/api", (req, res) => {
   const user = req.user;
   if (!user) {
     return res.status(200).send({ user: null });
@@ -80,7 +81,7 @@ app.get("/api", isLoggedInCheck, (req, res) => {
 
 // route middleware
 app.use("/api/user", userRouter);
-app.use("/api/listings", isLoggedInCheck, listingRouter);
+app.use("/api/listings", listingRouter);
 app.use("/api/admin", onlyLoggedInUser, isAdmin, adminRouter);
 
 // err middleware
