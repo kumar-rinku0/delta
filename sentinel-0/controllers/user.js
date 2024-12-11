@@ -66,7 +66,6 @@ const handleDeleteUser = async (req, res) => {
   const user = req.user;
   const id = user._id;
   const deletedUser = await User.deleteUser(id);
-  req.flash("success", "account pruned.");
   res.cookie("_session_token", null);
   req.session.destroy((err) => {
     if (err) {
@@ -74,7 +73,9 @@ const handleDeleteUser = async (req, res) => {
     }
   });
   console.log(deletedUser);
-  return res.status(200).redirect("/");
+  return res
+    .status(200)
+    .send({ type: "success", msg: "user pruned!", deletedUser: deletedUser });
 };
 
 const handleUpdateUserUsername = async (req, res) => {
@@ -94,7 +95,11 @@ const handleUpdateUserUsername = async (req, res) => {
   const token = setUser(updatedUser);
   res.cookie("_session_token", token);
   req.flash("success", "username updated!");
-  return res.status(200).redirect("/user/account");
+  return res.status(200).send({
+    type: "success",
+    msg: "username updated!",
+    updatedUser: updatedUser,
+  });
 };
 
 const handleChangeUserPassword = async (req, res) => {
@@ -102,13 +107,12 @@ const handleChangeUserPassword = async (req, res) => {
   const { password } = req.body;
   const userCheck = await User.isRightUser(user.username, password.old);
   if (userCheck.message) {
-    req.flash("error", `${userCheck.message}`);
-    return res.status(401).redirect("/user/account");
+    return res.status(401).send({ type: "error", msg: userCheck.message });
   }
   userCheck.password = password.new;
   await userCheck.save();
   req.flash("success", "password updated!");
-  return res.status(200).redirect("/user/account");
+  return res.status(200).send({ type: "success", msg: "password updated!" });
 };
 
 module.exports = {

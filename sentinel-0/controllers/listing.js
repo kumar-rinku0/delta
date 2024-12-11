@@ -73,8 +73,7 @@ const handleUpdateLising = async (req, res) => {
   }
   newListing.image = filename && url ? { filename, url } : newListing.image;
   await newListing.save();
-  req.flash("success", "listing updated!");
-  return res.status(200).redirect(`/listings/${newListing._id}`);
+  return res.status(200).send({ type: "success", msg: "listing updated!" });
 };
 
 const handleShowUsernameListings = async (req, res) => {
