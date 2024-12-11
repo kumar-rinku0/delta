@@ -12,16 +12,17 @@ const geocodingClient = mbxGeoCoding({ accessToken: mapToken });
 const handleDeleteListing = async (req, res) => {
   const { id, createdBy } = req.params;
   if (id.length != 24 || createdBy.length != 24) {
-    throw new ExpressError(400, "Incorrect listing!!");
+    return res.status(401).send({ type: "error", msg: "incorrect listing!!" });
   }
   let user = req.user;
   // const listing = await Listing.findById(id);
   if (user._id.toString() !== createdBy) {
-    throw new ExpressError(401, "Unauthorized pruning!!");
+    return res
+      .status(401)
+      .send({ type: "error", msg: "unauthorized pruning!!" });
   }
   await Listing.findByIdAndDelete(id);
-  req.flash("success", "listing pruned!!");
-  return res.status(200).redirect("/");
+  return res.status(200).send({ type: "success", msg: "listing pruned!!" });
 };
 
 const handleCreateListing = async (req, res) => {
@@ -40,8 +41,7 @@ const handleCreateListing = async (req, res) => {
   newListing.createdBy = user._id;
   newListing.location.geometry = geometry;
   await newListing.save();
-  req.flash("success", "listing saved!");
-  return res.status(200).redirect(`/listings/${newListing._id}`);
+  return res.status(201).send({ type: "success", msg: "listing saved!" });
 };
 
 const handleUpdateLising = async (req, res) => {
@@ -51,8 +51,9 @@ const handleUpdateLising = async (req, res) => {
   const url = req?.file?.path;
   const { id } = req.params;
   if (id.length != 24) {
-    req.flash("success", "invalid listing info!!");
-    return res.redirect(`/listings/user/${user.username}`);
+    return res
+      .status(400)
+      .send({ type: "error", msg: "invalid listing info!" });
   }
   const newListing = await Listing.findById(id);
   newListing.title = listing.title;
@@ -80,26 +81,25 @@ const handleShowUsernameListings = async (req, res) => {
   let user = req.user;
   const { username } = req.params;
   if (username !== user.username.toString()) {
-    throw new ExpressError(400, "Bad Requiest!! incorrect username!");
+    return res
+      .status(401)
+      .send({ type: "error", msg: "bad req! incorrect username." });
   }
   let listings = await Listing.find({ createdBy: user._id }).sort({
     createdAt: -1,
   });
   return res.status(200).send({
     listings,
-    user,
     myListings: true,
     title: "my listings!!",
   });
 };
 
 const handleShowListings = async (req, res) => {
-  let user = req.user || null;
   let listings = await Listing.find({}).sort({ createdAt: -1 });
   return res.status(200).send({
     listings,
     myListings: false,
-    user,
     title: "listings!!!",
   });
 };
@@ -108,14 +108,15 @@ const handleShowOneListing = async (req, res) => {
   let user = req.user || null;
   const { id } = req.params;
   if (id.toString().length != 24) {
-    // throw new ExpressError(400, "Listing id is incorrect!!");
-    req.flash("error", "Listing id is incorrect!!");
-    return res.status(400).redirect("/listings");
+    return res
+      .status(400)
+      .send({ type: "error", msg: "listing id is incoorect!!" });
   }
   const listing = await Listing.findById(id).populate("reviews");
   if (!listing) {
-    req.flash("error", "Listing id is invalid!!");
-    return res.status(400).redirect("/listings");
+    return res
+      .status(400)
+      .send({ type: "error", msg: "incorrect listing id!" });
   }
   const listingCreatedBy = await User.findById(listing.createdBy);
   if (user && listing.createdBy === user._id) {
@@ -123,10 +124,8 @@ const handleShowOneListing = async (req, res) => {
   }
   return res.status(200).send({
     listing,
-    user,
     accessToken: process.env.MAPBOX_DEFULT_TOKEN,
     listingCreatedBy,
-    title: "listing based on title",
   });
 };
 
