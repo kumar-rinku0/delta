@@ -26,20 +26,24 @@ const handleDeleteListing = async (req, res) => {
 };
 
 const handleCreateListing = async (req, res) => {
-  const { listing } = req.body;
+  const { title, description, location, country, price } = req.body;
   const response = await geocodingClient
     .forwardGeocode({
-      query: `${listing.location.value} ${listing.location.country}`,
+      query: `${location} ${country}`,
       limit: 1,
     })
     .send();
   const geometry = response.body.features[0].geometry;
   const { filename, path: url } = req.file;
   let user = req.user;
-  const newListing = new Listing(listing);
+  const newListing = new Listing({
+    title,
+    description,
+    price,
+  });
   newListing.image = { filename, url };
   newListing.createdBy = user._id;
-  newListing.location.geometry = geometry;
+  newListing.location = { value: location, country, geometry };
   await newListing.save();
   return res.status(201).send({ type: "success", msg: "listing saved!" });
 };
@@ -109,7 +113,7 @@ const handleShowOneListing = async (req, res) => {
   if (id.toString().length != 24) {
     return res
       .status(400)
-      .send({ type: "error", msg: "listing id is incoorect!!" });
+      .send({ type: "error", msg: "listing id is incorrect!!" });
   }
   const listing = await Listing.findById(id).populate("reviews");
   if (!listing) {

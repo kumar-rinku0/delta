@@ -39,7 +39,7 @@ route.get(
 route.post(
   "/create",
   onlyLoggedInUser,
-  upload.single("listing[image]"),
+  upload.single("image"),
   wrapAsync(handleCreateListing)
 );
 
