@@ -8,21 +8,23 @@ const handleUpdateReview = async (req, res, next) => {
   const { id } = req.params;
   const { rating, msg } = req.body;
   if (id.toString().length != 24) {
-    req.flash("error", "listing id incorrect!!");
-    return res.status(201).redirect("/listings");
+    return res
+      .status(400)
+      .send({ type: "error", msg: "listing id incorrect!!" });
   }
   const listing = await Listing.findById(id);
   if (!listing) {
-    req.flash("error", "Listing not Found!!");
-    return res.status(201).redirect("/listings");
+    return res.status(400).send({ type: "error", msg: "Listing not found!" });
   }
   if (!rating || rating <= 0 || rating >= 6) {
-    req.flash("error", "No vailid rating stars provided!!");
-    return res.status(201).redirect(`/listings/${listing._id}`);
+    return res
+      .status(400)
+      .send({ type: "error", msg: "No rating stars provided!!" });
   }
   if (listing.createdBy.toString() === user._id.toString()) {
-    req.flash("error", "You can't rate your own listing!!");
-    return res.status(201).redirect(`/listings/${listing._id}`);
+    return res
+      .status(400)
+      .send({ type: "error", msg: "can't rate own listings!" });
   }
   const popListing = await Listing.findById(id).populate("reviews");
   const reviews = popListing.reviews.filter((value) => {
@@ -33,12 +35,10 @@ const handleUpdateReview = async (req, res, next) => {
     review.rating = rating || review.rating;
     review.msg = msg.trim() || review.msg;
     await review.save();
-    req.flash("success", "Review Updated!!");
-    return res.status(201).redirect(`/listings/${listing._id}`);
+    return res.status(201).send({ type: "success", msg: "Review Updated!" });
   }
   if (!msg.trim()) {
-    req.flash("error", "No msg provided!!");
-    return res.status(201).redirect(`/listings/${listing._id}`);
+    return res.status(400).send({ type: "error", msg: "No msg provided!" });
   }
   return next();
 };

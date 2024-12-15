@@ -15,12 +15,12 @@ const onlyLoggedInUser = (req, res, next) => {
     user = getUser(req.cookies?._session_token);
     req.user = user;
   }
-  if (!user && !req?.baseUrl) {
-    return res.redirect("/user/signin");
-  }
+  // if (!user && !req?.baseUrl) {
+  //   return res.send("/login");
+  // }
   if (!user) {
     // throw new ExpressError(401, "session expired. login again!!");
-    return res.redirect("/user/signin");
+    return res.status(400).send({ type: "error", msg: "login to access!" });
   }
   if (user.status !== "active") {
     throw new ExpressError(401, "unauthorized req. or blocked by admin!!");
