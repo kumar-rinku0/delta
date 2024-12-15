@@ -6,7 +6,9 @@ const handleSignIn = async (req, res) => {
   const { username, password } = req.body;
   const user = await User.isRightUser(username, password);
   if (user.message) {
-    return res.status(401).send({ msg: user.message, auth: "failed" });
+    return res
+      .status(401)
+      .send({ type: "error", msg: user.message, auth: "failed" });
   }
   const token = setUser(user);
   res.cookie("_session_token", token, {
@@ -34,11 +36,15 @@ const handleSignUp = async (req, res) => {
   user1.status = "active";
   const user2 = await User.findOne({ username }).exec();
   if (user2) {
-    return res.status(400).send({ msg: "Username already exist!" });
+    return res
+      .status(400)
+      .send({ type: "error", msg: "Username already exist!", auth: "failed" });
   }
   const user3 = await User.findOne({ email }).exec();
   if (user3) {
-    return res.status(400).send({ msg: "E-mail already exist!" });
+    return res
+      .status(400)
+      .send({ type: "error", msg: "E-mail already exist!", auth: "failed" });
   }
   await user1.save();
   const token = setUser(user1);
@@ -83,8 +89,7 @@ const handleUpdateUserUsername = async (req, res) => {
   const { username } = req.body;
   const userCheck = await User.findOne({ username });
   if (userCheck) {
-    req.flash("error", "invalid username!");
-    return res.status(400).redirect("/user/account");
+    return res.status(400).send({ type: "error", msg: "invalid username!" });
   }
   const updatedUser = await User.findOneAndUpdate(
     { username: user.username },
@@ -94,7 +99,6 @@ const handleUpdateUserUsername = async (req, res) => {
   req.user = updatedUser;
   const token = setUser(updatedUser);
   res.cookie("_session_token", token);
-  req.flash("success", "username updated!");
   return res.status(200).send({
     type: "success",
     msg: "username updated!",
@@ -111,7 +115,6 @@ const handleChangeUserPassword = async (req, res) => {
   }
   userCheck.password = password.new;
   await userCheck.save();
-  req.flash("success", "password updated!");
   return res.status(200).send({ type: "success", msg: "password updated!" });
 };
 

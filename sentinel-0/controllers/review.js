@@ -15,7 +15,7 @@ const handleCreateReview = async (req, res) => {
   listing.reviews.push(review);
   await review.save();
   await listing.save();
-  return res.status(201).redirect(`/${listing._id}`);
+  return res.status(200).send({ type: "success", msg: "review created!" });
 };
 
 module.exports = {
