@@ -3,7 +3,8 @@ const ExpressError = require("../utils/express-error.js");
 const { getUser } = require("../utils/jwt.js");
 
 const isLoggedInCheck = (req, res, next) => {
-  let user = getUser(req.cookies?._session_token);
+  const cookie = req.cookies?._session_token;
+  let user = getUser(cookie);
   req.user = user;
   return next();
 };

@@ -1,6 +1,6 @@
 const jwt = require("jsonwebtoken");
 
-const key = process.env.SESSION_SECRET || "this&is*key!";
+const KEY = process.env.SESSION_SECRET;
 // KEY =
 
 const setUser = (user) => {
@@ -12,10 +12,9 @@ const setUser = (user) => {
       role: user.role,
       status: user.status,
     },
-    key,
+    KEY,
     {
       expiresIn: "7d",
-      notBefore: "7d",
       algorithm: "HS512",
     }
   );
@@ -24,7 +23,7 @@ const setUser = (user) => {
 const getUser = (token) => {
   if (!token) return null;
   try {
-    return jwt.verify(token, key);
+    return jwt.verify(token, KEY);
   } catch (err) {
     return null;
   }
