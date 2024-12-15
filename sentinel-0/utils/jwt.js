@@ -1,6 +1,6 @@
 const jwt = require("jsonwebtoken");
 
-const key = process.env.KEY || "this&is*key!";
+const key = process.env.SESSION_SECRET || "this&is*key!";
 // KEY =
 
 const setUser = (user) => {
@@ -14,7 +14,9 @@ const setUser = (user) => {
     },
     key,
     {
-      expiresIn: "1h",
+      expiresIn: "7d",
+      notBefore: "7d",
+      algorithm: "HS512",
     }
   );
 };

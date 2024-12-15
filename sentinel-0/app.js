@@ -68,8 +68,8 @@ app.use(session(sessionOptions));
 
 // database connection.
 connection();
-app.use(isLoggedInCheck);
 
+app.use(isLoggedInCheck);
 // root route
 app.get("/api", (req, res) => {
   const user = req.user;
