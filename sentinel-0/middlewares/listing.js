@@ -35,7 +35,9 @@ const handleUpdateReview = async (req, res, next) => {
     review.rating = rating || review.rating;
     review.msg = msg.trim() || review.msg;
     await review.save();
-    return res.status(201).send({ type: "success", msg: "Review Updated!" });
+    return res
+      .status(201)
+      .send({ type: "success", msg: "Review Updated!", listing: popListing });
   }
   if (!msg.trim()) {
     return res.status(400).send({ type: "error", msg: "No msg provided!" });

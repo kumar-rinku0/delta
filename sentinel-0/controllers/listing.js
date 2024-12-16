@@ -1,5 +1,6 @@
 const Listing = require("../models/listing");
 const User = require("../models/user");
+const cloudinary = require("cloudinary").v2;
 const ExpressError = require("../utils/express-error");
 
 // geocoding
@@ -34,13 +35,17 @@ const handleCreateListing = async (req, res) => {
     })
     .send();
   const geometry = response.body.features[0].geometry;
-  const { filename, path: url } = req.file;
+  const { filename, path } = req.file;
   let user = req.user;
   const newListing = new Listing({
     title,
     description,
     price,
   });
+  const url = path.replace(
+    "/upload",
+    "/upload/f_auto/c_fill,g_auto,h_480,w_720/w_320"
+  );
   newListing.image = { filename, url };
   newListing.createdBy = user._id;
   newListing.location = { value: location, country, geometry };
@@ -49,23 +54,22 @@ const handleCreateListing = async (req, res) => {
 };
 
 const handleUpdateLising = async (req, res) => {
-  let user = req.user;
   const { listing } = req.body;
   const filename = req?.file?.filename;
-  const url = req?.file?.path;
+  const path = req?.file?.path;
   const { id } = req.params;
   if (id.length != 24) {
     return res
       .status(400)
       .send({ type: "error", msg: "invalid listing info!" });
   }
-  const newListing = await Listing.findById(id);
-  newListing.title = listing.title;
-  newListing.description = listing.description;
-  newListing.price = listing.price;
-  if (newListing.location.value !== listing.location.value) {
-    newListing.location.value = listing.location.value;
-    newListing.location.country = listing.location.country;
+  const oldListing = await Listing.findById(id);
+  oldListing.title = listing.title;
+  oldListing.description = listing.description;
+  oldListing.price = listing.price;
+  if (oldListing.location.value !== listing.location.value) {
+    oldListing.location.value = listing.location.value;
+    oldListing.location.country = listing.location.country;
     const response = await geocodingClient
       .forwardGeocode({
         query: `${listing.location.value} ${listing.location.country}`,
@@ -73,11 +77,23 @@ const handleUpdateLising = async (req, res) => {
       })
       .send();
     const geometry = response.body.features[0].geometry;
-    newListing.location.geometry = geometry;
+    oldListing.location.geometry = geometry;
   }
-  newListing.image = filename && url ? { filename, url } : newListing.image;
-  await newListing.save();
-  return res.status(200).send({ type: "success", msg: "listing updated!" });
+  if (filename && path) {
+    const url = path.replace(
+      "/upload",
+      "/upload/f_auto/c_fill,g_auto,h_480,w_720/w_320"
+    );
+    oldListing.image = { filename, url };
+  } else {
+    oldListing.image = oldListing.image;
+  }
+  // updating old listing with new values!
+  await oldListing.save();
+  oldListing.image.url = oldListing.image.url.replace("/w_320", "q_auto");
+  return res
+    .status(200)
+    .send({ type: "success", msg: "listing updated!", listing: oldListing });
 };
 
 const handleShowUsernameListings = async (req, res) => {
@@ -121,6 +137,10 @@ const handleShowOneListing = async (req, res) => {
       .status(400)
       .send({ type: "error", msg: "incorrect listing id!" });
   }
+  listing.image.url = listing.image.url.replace(
+    "/c_fill,g_auto,h_480,w_720/w_320",
+    "/q_auto"
+  );
   const listingCreatedBy = await User.findById(listing.createdBy);
   if (user && listing.createdBy === user._id) {
     listingCreatedBy = null;

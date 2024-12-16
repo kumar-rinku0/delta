@@ -11,8 +11,6 @@ const {
   handleUpdateLising,
   handleShowListings,
 } = require("../controllers/listing.js");
-const { handleCreateReview } = require("../controllers/review.js");
-const { handleUpdateReview } = require("../middlewares/listing.js");
 const multer = require("multer");
 const { multerStorage } = require("../utils/cloud-init");
 const upload = multer({ storage: multerStorage });
@@ -44,14 +42,7 @@ route.post(
 );
 
 // unprotected route.
-route
-  .route("/:id")
-  .get(wrapAsync(handleShowOneListing))
-  .post(
-    onlyLoggedInUser,
-    wrapAsync(handleUpdateReview),
-    wrapAsync(handleCreateReview)
-  );
+route.route("/:id").get(wrapAsync(handleShowOneListing));
 
 route
   .route("/:id/edit")
