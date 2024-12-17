@@ -72,6 +72,10 @@ connection();
 
 app.use(isLoggedInCheck);
 // root route
+app.get("/", (req, res) => {
+  return res.status(200).send({ req: "OK!" });
+});
+
 app.get("/api", (req, res) => {
   const user = req.user;
   if (!user) {
