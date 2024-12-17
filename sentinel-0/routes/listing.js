@@ -47,20 +47,17 @@ route.route("/:id").get(wrapAsync(handleShowOneListing));
 route
   .route("/:id/edit")
   .get(onlyLoggedInUser, async (req, res) => {
-    let user = req.user;
     const { id } = req.params;
     const listing = await Listing.findById(id);
-    const imageUrl = listing.image.url.replace("/upload", "/upload/w_200");
-    return res.status(200).render("edit-listing.ejs", {
-      title: "edit listing...",
-      user,
+    return res.status(200).send({
+      type: "success",
+      msg: "listing send!",
       listing,
-      imageUrl,
     });
   })
   .post(
     onlyLoggedInUser,
-    upload.single("listing[image]"),
+    upload.single("image"),
     wrapAsync(handleUpdateLising)
   );
 

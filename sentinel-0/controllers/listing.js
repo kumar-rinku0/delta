@@ -54,7 +54,7 @@ const handleCreateListing = async (req, res) => {
 };
 
 const handleUpdateLising = async (req, res) => {
-  const { listing } = req.body;
+  const { title, description, location, country, price } = req.body;
   const filename = req?.file?.filename;
   const path = req?.file?.path;
   const { id } = req.params;
@@ -64,12 +64,12 @@ const handleUpdateLising = async (req, res) => {
       .send({ type: "error", msg: "invalid listing info!" });
   }
   const oldListing = await Listing.findById(id);
-  oldListing.title = listing.title;
-  oldListing.description = listing.description;
-  oldListing.price = listing.price;
-  if (oldListing.location.value !== listing.location.value) {
-    oldListing.location.value = listing.location.value;
-    oldListing.location.country = listing.location.country;
+  oldListing.title = title;
+  oldListing.description = description;
+  oldListing.price = price;
+  if (oldListing.location.value !== location) {
+    oldListing.location.value = location;
+    oldListing.location.country = country;
     const response = await geocodingClient
       .forwardGeocode({
         query: `${listing.location.value} ${listing.location.country}`,
