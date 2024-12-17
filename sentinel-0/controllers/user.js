@@ -87,6 +87,11 @@ const handleDeleteUser = async (req, res) => {
 const handleUpdateUserUsername = async (req, res) => {
   const user = req.user;
   const { username } = req.body;
+  if (username === user.username) {
+    return res
+      .status(400)
+      .send({ type: "error", msg: "it's current username!" });
+  }
   const userCheck = await User.findOne({ username });
   if (userCheck) {
     return res.status(400).send({ type: "error", msg: "invalid username!" });
@@ -108,12 +113,15 @@ const handleUpdateUserUsername = async (req, res) => {
 
 const handleChangeUserPassword = async (req, res) => {
   const user = req.user;
-  const { password } = req.body;
-  const userCheck = await User.isRightUser(user.username, password.old);
-  if (userCheck.message) {
-    return res.status(401).send({ type: "error", msg: userCheck.message });
+  const { oldpassword, newpassword } = req.body;
+  if (oldpassword === newpassword) {
+    return res.status(400).send({ type: "error", msg: "same password!" });
   }
-  userCheck.password = password.new;
+  const userCheck = await User.isRightUser(user.username, oldpassword);
+  if (userCheck.message) {
+    return res.status(400).send({ type: "error", msg: userCheck.message });
+  }
+  userCheck.password = newpassword;
   await userCheck.save();
   return res.status(200).send({ type: "success", msg: "password updated!" });
 };

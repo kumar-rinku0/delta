@@ -37,10 +37,6 @@ route.get("/signout", handleSignOut);
 
 route
   .route("/account")
-  .get(onlyLoggedInUser, (req, res) => {
-    const user = req.user;
-    return res.render("account.ejs", { title: "account settings...", user });
-  })
   .patch(onlyLoggedInUser, handleUpdateUserUsername)
   .put(onlyLoggedInUser, handleChangeUserPassword);
 
