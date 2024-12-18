@@ -67,9 +67,10 @@ listingSchema.post("findOneAndDelete", async (listing) => {
   }
 });
 
-listingSchema.post("deleteMany", async () => {
-  const result = await Review.deleteMany({});
-  console.log(result);
+listingSchema.post("deleteMany", async (listings) => {
+  console.log(listings);
+  // const result = await Review.deleteMany({});
+  // console.log(result);
 });
 
 const Listing = model("Listing", listingSchema);

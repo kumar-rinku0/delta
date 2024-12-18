@@ -1,5 +1,6 @@
 const { Schema, model } = require("mongoose");
 const Listing = require("./listing");
+const Review = require("./review");
 const { randomBytes, createHmac } = require("crypto");
 
 const userSchema = new Schema(
@@ -80,8 +81,13 @@ userSchema.static("isRightUser", async (username, password) => {
 });
 
 userSchema.static("deleteUser", async (id) => {
-  await Listing.deleteMany({ createdBy: id });
+  const listings = await Listing.find({ createdBy: id });
+  for (let listing of listings) {
+    await Listing.findByIdAndDelete(listing._id);
+  }
+  // await Listing.deleteMany({ createdBy: id });
   const user = await User.findByIdAndDelete(id);
+  await Review.deleteMany({ username: user.username });
   return user;
 });
 
