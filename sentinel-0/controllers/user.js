@@ -1,6 +1,9 @@
+const url = require("url");
 const User = require("../models/user.js");
 const ExpressError = require("../utils/express-error.js");
-const { setUser } = require("../utils/jwt.js");
+const { setUser, getUser, getInfo } = require("../utils/jwt.js");
+const { getToken } = require("../utils/auth.js");
+const { setCredentials } = require("../utils/auth.js");
 
 const handleSignIn = async (req, res) => {
   const { username, password } = req.body;
@@ -126,6 +129,45 @@ const handleChangeUserPassword = async (req, res) => {
   return res.status(200).send({ type: "success", msg: "password updated!" });
 };
 
+const handleGoogleCallback = async (req, res) => {
+  const { code } = req.query;
+  const tokens = await getToken(code);
+  // setCredentials(tokens);
+  const { email, email_verified, name, given_name } = getInfo(tokens.id_token);
+  if (!email_verified) {
+    return res.status(400).send({ type: "error", msg: "Email not verified!" });
+  }
+  const userCheck = await User.findOne({ email });
+  if (userCheck) {
+    req.user = userCheck;
+    res.cookie("_session_token", setUser(userCheck), {
+      expires: Date.now() + 7 * 24 * 60 * 60 * 1000,
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+      httpOnly: true,
+    });
+    return res.status(200).redirect("http://127.0.0.1:3000");
+    // return res.status(200).send({ user: userCheck });
+  }
+  const username = given_name.replace(
+    given_name,
+    `${given_name}_${Math.floor(Math.random() * 100)}`
+  );
+  const user = new User({
+    username: username,
+    email: email,
+    role: "local",
+    status: "active",
+    password: username,
+  });
+  await user.save();
+  req.user = user;
+  res.cookie("_session_token", setUser(user), {
+    expires: Date.now() + 7 * 24 * 60 * 60 * 1000,
+    maxAge: 7 * 24 * 60 * 60 * 1000,
+    httpOnly: true,
+  });
+  return res.status(200).redirect("http://127.0.0.1:3000");
+};
 module.exports = {
   handleSignUp,
   handleSignIn,
@@ -133,4 +175,5 @@ module.exports = {
   handleDeleteUser,
   handleUpdateUserUsername,
   handleChangeUserPassword,
+  handleGoogleCallback,
 };

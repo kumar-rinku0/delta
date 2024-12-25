@@ -20,10 +20,14 @@ const setUser = (user) => {
   );
 };
 
-const getUser = (token) => {
+const getInfo = (token) => {
+  return jwt.decode(token);
+};
+
+const getUser = (token, accessToken = KEY) => {
   if (!token) return null;
   try {
-    return jwt.verify(token, KEY);
+    return jwt.verify(token, accessToken);
   } catch (err) {
     return null;
   }
@@ -32,4 +36,5 @@ const getUser = (token) => {
 module.exports = {
   setUser,
   getUser,
+  getInfo,
 };

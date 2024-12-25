@@ -1,6 +1,9 @@
 const { Router } = require("express");
+const crypto = require("crypto");
 const { onlyLoggedInUser } = require("../middlewares/auth.js");
 const wrapAsync = require("../utils/wrap-async.js");
+const { setUser } = require("../utils/jwt.js");
+const { authorizeUrl, getToken } = require("../utils/auth.js");
 
 const {
   handleSignIn,
@@ -9,7 +12,9 @@ const {
   handleDeleteUser,
   handleUpdateUserUsername,
   handleChangeUserPassword,
+  handleGoogleCallback,
 } = require("../controllers/user.js");
+const User = require("../models/user.js");
 const route = Router();
 
 // sign in get requist
@@ -41,5 +46,21 @@ route
   .put(onlyLoggedInUser, handleChangeUserPassword);
 
 route.delete("/destroy", onlyLoggedInUser, handleDeleteUser);
+
+route.get("/auth/google", (req, res) => {
+  // if (req.user) {
+  //   const token = setUser(req.user);
+  //   res.cookie("_session_token", token);
+  //   return res.status(200).redirect("/login");
+  // } else
+  if (authorizeUrl === null || authorizeUrl === false) {
+    return res.status(500).json({ message: "Google Auth is not available" });
+  }
+  const state = crypto.randomBytes(32).toString("hex");
+  req.session.state = state;
+  return res.status(200).redirect(authorizeUrl);
+});
+
+route.get("/auth/google/callback", wrapAsync(handleGoogleCallback));
 
 module.exports = route;
