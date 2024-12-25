@@ -2,7 +2,7 @@ const { google } = require("googleapis");
 
 const YOUR_CLIENT_ID = process.env.GOOGLE_OAUTH_CLIENT_ID;
 const YOUR_CLIENT_SECRET = process.env.GOOGLE_OAUTH_CLIENT_SECRET;
-const YOUR_REDIRECT_URL = process.env.GOOGLE_OAUTH_REDIRECT_URL;
+const YOUR_REDIRECT_URL = process.env.GOOGLE_OAUTH_REDIRECT_URL.toString();
 
 const scopes = [
   "https://www.googleapis.com/auth/userinfo.profile",
