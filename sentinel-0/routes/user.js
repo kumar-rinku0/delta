@@ -48,11 +48,6 @@ route
 route.delete("/destroy", onlyLoggedInUser, handleDeleteUser);
 
 route.get("/auth/google", (req, res) => {
-  // if (req.user) {
-  //   const token = setUser(req.user);
-  //   res.cookie("_session_token", token);
-  //   return res.status(200).redirect("/login");
-  // } else
   if (authorizeUrl === null || authorizeUrl === false) {
     return res.status(500).json({ message: "Google Auth is not available" });
   }
