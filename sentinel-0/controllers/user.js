@@ -133,12 +133,11 @@ const handleGoogleCallback = async (req, res) => {
   // const { code } = req.query;
   // const tokens = await getToken(code);
   const tokens = req.body;
-  console.log(tokens);
-  const { email, email_verified, name, given_name } = getInfo(tokens.id_token);
+  const { email, email_verified, given_name } = getInfo(tokens.id_token);
   if (!email_verified) {
     return res.status(400).send({ type: "error", msg: "Email not verified!" });
   }
-  const userCheck = await User.findOne({ email });
+  const userCheck = await User.findOne({ email: email });
   if (userCheck) {
     req.user = userCheck;
     res.cookie("_session_token", setUser(userCheck), {
@@ -151,7 +150,6 @@ const handleGoogleCallback = async (req, res) => {
       msg: `${given_name} welcome to sentinel!`,
       user: userCheck,
     });
-    // return res.status(200).send({ user: userCheck });
   }
   const username = given_name.replace(
     given_name,
@@ -174,9 +172,10 @@ const handleGoogleCallback = async (req, res) => {
   return res.status(200).send({
     type: "success",
     msg: `${given_name} welcome to sentinel!`,
-    user: userCheck,
+    user: user,
   });
 };
+
 module.exports = {
   handleSignUp,
   handleSignIn,
