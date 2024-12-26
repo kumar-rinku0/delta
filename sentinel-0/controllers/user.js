@@ -129,9 +129,11 @@ const handleChangeUserPassword = async (req, res) => {
 };
 
 const handleGoogleCallback = async (req, res) => {
-  const callbackUrl = process.env.GOOGLE_OAUTH_CALLBACK_URL.toString();
-  const { code } = req.query;
-  const tokens = await getToken(code);
+  // const callbackUrl = process.env.GOOGLE_OAUTH_CALLBACK_URL.toString();
+  // const { code } = req.query;
+  // const tokens = await getToken(code);
+  const tokens = req.body;
+  console.log(tokens);
   const { email, email_verified, name, given_name } = getInfo(tokens.id_token);
   if (!email_verified) {
     return res.status(400).send({ type: "error", msg: "Email not verified!" });
@@ -144,7 +146,11 @@ const handleGoogleCallback = async (req, res) => {
       maxAge: 7 * 24 * 60 * 60 * 1000,
       httpOnly: true,
     });
-    return res.status(200).redirect(callbackUrl);
+    return res.status(200).send({
+      type: "success",
+      msg: `${given_name} welcome to sentinel!`,
+      user: userCheck,
+    });
     // return res.status(200).send({ user: userCheck });
   }
   const username = given_name.replace(
@@ -165,7 +171,11 @@ const handleGoogleCallback = async (req, res) => {
     maxAge: 7 * 24 * 60 * 60 * 1000,
     httpOnly: true,
   });
-  return res.status(200).redirect(callbackUrl);
+  return res.status(200).send({
+    type: "success",
+    msg: `${given_name} welcome to sentinel!`,
+    user: userCheck,
+  });
 };
 module.exports = {
   handleSignUp,

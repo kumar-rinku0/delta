@@ -56,6 +56,6 @@ route.get("/auth/google", (req, res) => {
   return res.status(200).redirect(authorizeUrl);
 });
 
-route.get("/auth/google/callback", wrapAsync(handleGoogleCallback));
+route.post("/auth/google/callback", wrapAsync(handleGoogleCallback));
 
 module.exports = route;
