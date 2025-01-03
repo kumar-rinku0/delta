@@ -151,16 +151,12 @@ const handleGoogleCallback = async (req, res) => {
       user: userCheck,
     });
   }
-  const username = given_name.replace(
-    given_name,
-    `${given_name}_${Math.floor(Math.random() * 100)}`
-  );
   const user = new User({
-    username: username,
+    username: given_name,
     email: email,
     role: "local",
     status: "active",
-    password: username,
+    password: given_name,
   });
   await user.save();
   req.user = user;
