@@ -23,7 +23,6 @@ const {
   onlyLoggedInUser,
   isAdmin,
   isLoggedInCheck,
-  setFlash,
 } = require("./middlewares/auth.js");
 
 const app = express();

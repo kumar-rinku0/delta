@@ -44,7 +44,7 @@ const handleCreateListing = async (req, res) => {
   });
   const url = path.replace(
     "/upload",
-    "/upload/f_auto/c_fill,g_auto,h_480,w_720/w_320"
+    "/upload/f_auto/c_fill,g_auto,h_480,w_720/q_auto"
   );
   newListing.image = { filename, url };
   newListing.createdBy = user._id;
@@ -72,7 +72,7 @@ const handleUpdateLising = async (req, res) => {
     oldListing.location.country = country;
     const response = await geocodingClient
       .forwardGeocode({
-        query: `${listing.location.value} ${listing.location.country}`,
+        query: `${location} ${country}`,
         limit: 1,
       })
       .send();
@@ -82,7 +82,7 @@ const handleUpdateLising = async (req, res) => {
   if (filename && path) {
     const url = path.replace(
       "/upload",
-      "/upload/f_auto/c_fill,g_auto,h_480,w_720/w_320"
+      "/upload/f_auto/c_fill,g_auto,h_480,w_720/q_auto"
     );
     oldListing.image = { filename, url };
   } else {
@@ -90,7 +90,6 @@ const handleUpdateLising = async (req, res) => {
   }
   // updating old listing with new values!
   await oldListing.save();
-  oldListing.image.url = oldListing.image.url.replace("/w_320", "q_auto");
   return res
     .status(200)
     .send({ type: "success", msg: "listing updated!", listing: oldListing });
@@ -137,10 +136,6 @@ const handleShowOneListing = async (req, res) => {
       .status(400)
       .send({ type: "error", msg: "incorrect listing id!" });
   }
-  listing.image.url = listing.image.url.replace(
-    "/c_fill,g_auto,h_480,w_720/w_320",
-    "/q_auto"
-  );
   const listingCreatedBy = await User.findById(listing.createdBy);
   if (user && listing.createdBy === user._id) {
     listingCreatedBy = null;

@@ -49,6 +49,7 @@ route
   .get(onlyLoggedInUser, async (req, res) => {
     const { id } = req.params;
     const listing = await Listing.findById(id);
+    listing.image.url = listing.image.url.replace("q_auto", "w_320");
     return res.status(200).send({
       type: "success",
       msg: "listing send!",
