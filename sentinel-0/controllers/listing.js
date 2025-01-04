@@ -131,6 +131,10 @@ const handleShowOneListing = async (req, res) => {
       .send({ type: "error", msg: "listing id is incorrect!!" });
   }
   const listing = await Listing.findById(id).populate("reviews");
+  listing.image.url = listing.image.url.replace(
+    "/c_fill,g_auto,h_480,w_720/q_auto",
+    "/q_auto"
+  );
   if (!listing) {
     return res
       .status(400)
