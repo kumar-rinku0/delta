@@ -2,7 +2,7 @@
 import { getUser } from "../util/jwt.js";
 
 const isLoggedInCheck = (req, res, next) => {
-  const cookie = req.cookies?._session_token;
+  const cookie = req.cookies?.JWT_TOKEN;
   let user = getUser(cookie);
   req.user = user;
   return next();
@@ -12,7 +12,7 @@ const onlyLoggedInUser = (req, res, next) => {
   // req.session.originalUrl = req.originalUrl;
   let user = req.user;
   if (!user || user == null) {
-    user = getUser(req.cookies?._session_token);
+    user = getUser(req.cookies?.JWT_TOKEN);
     req.user = user;
   }
   if (!user) {

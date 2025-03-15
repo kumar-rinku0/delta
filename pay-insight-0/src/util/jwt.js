@@ -8,6 +8,7 @@ const setUser = (user) => {
     {
       _id: user._id,
       username: user.username,
+      givenName: user.givenName,
       email: user.email,
       role: user.role,
       company: user.company,
