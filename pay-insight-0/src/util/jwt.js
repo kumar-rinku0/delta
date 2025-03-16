@@ -10,7 +10,7 @@ const setUser = (user) => {
       username: user.username,
       givenName: user.givenName,
       email: user.email,
-      role: user.role,
+      roleInfo: user.roleInfo,
       company: user.company,
       status: user.status,
     },

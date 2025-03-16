@@ -23,7 +23,7 @@ const handleCreateCompany = async (req, res) => {
     cinNo: obj.cinNo,
   });
   // company.createdBy = user;
-  user.companyWithRole.push({ role: obj.role, company: company });
+  user.roleInfo.push({ role: "admin", company: company });
   await company.save();
   await user.save();
   return res
