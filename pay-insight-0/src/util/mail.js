@@ -13,7 +13,7 @@ const transporter = nodemailer.createTransport({
     pass: process.env.MAIL_PASS || "pass@123",
   },
   secure: true, // use SSL
-  port: 465, // use the appropriate port
+  port: 587, // use the appropriate port
 });
 
 async function mail({ address, subject, text, html }) {
