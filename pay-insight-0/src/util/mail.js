@@ -12,8 +12,14 @@ const transporter = nodemailer.createTransport({
     user: process.env.MAIL_USER || "example@mail.com",
     pass: process.env.MAIL_PASS || "pass@123",
   },
-  secure: true, // use SSL
+  secure: false, // use SSL
   port: 465, // use the appropriate port
+  timeout: 60000, // 60s
+  debug: true, // include SMTP traffic in the logs
+  logger: true, // log information in console
+  tls: {
+    rejectUnauthorized: false,
+  },
 });
 
 async function mail({ address, subject, text, html }) {
