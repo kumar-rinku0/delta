@@ -1,30 +1,31 @@
 import { Schema, model } from "mongoose";
 
 const shiftShema = new Schema({
-  shiftType: {
+  type: {
     type: String,
+    default: "morning",
     enum: {
       values: ["morning", "evening", "night"],
       message: "invailid shift!",
     },
   },
   workDays: {
-    type: String,
-    default: "Mon-Sat",
+    type: Number,
+    default: 5,
     enum: {
-      values: ["Mon-Fri", "Mon-Sat"],
+      values: [4, 5, 6, 7],
       message: "invalid work days input!",
     },
   },
-  shiftStartTime: {
+  startTime: {
     type: String,
     required: true,
   },
-  shiftEndTime: {
+  endTime: {
     type: String,
     required: true,
   },
-  employeeId: {
+  createdFor: {
     type: Schema.Types.ObjectId,
     required: true,
     unique: true,

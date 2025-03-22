@@ -20,10 +20,10 @@ const handleUserSignUp = async (req, res) => {
     await user.save();
     // if (obj?.role !== "admin") {
     //   const shift = new Shift({
-    //     shiftType: obj.shiftType,
-    //     shiftStartTime: obj.shiftStartTime,
-    //     shiftEndTime: obj.shiftEndTime,
-    //     employeeId: user,
+    //     type: obj.type,
+    //     startTime: obj.startTime,
+    //     endTime: obj.endTime,
+    //     createdFor: user,
     //   });
     //   await shift.save();
     // }
