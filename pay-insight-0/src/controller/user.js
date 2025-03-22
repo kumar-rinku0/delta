@@ -40,6 +40,19 @@ const handleUserSignIn = async (req, res) => {
   if (user?.message) {
     return res.status(401).json({ message: user.message, status: user.status });
   }
+  // if (user.companyWithRole.length === 0) {
+  //   return res
+  //     .status(200)
+  //     .json({ message: "user not assigned to any company.", user: user });
+  // }
+  if (user.companyWithRole.length !== 0) {
+    const company = await Company.findById(user.companyWithRole[0].company);
+    if (!company) {
+      return res.status(400).json({ message: "company not found." });
+    }
+    user.company = company;
+    user.roleInfo = user.companyWithRole[0];
+  }
   const token = setUser(user);
   res.cookie("JWT_TOKEN", token, {
     expires: Date.now() + 7 * 24 * 60 * 60 * 1000,
@@ -47,7 +60,12 @@ const handleUserSignIn = async (req, res) => {
     httpOnly: true,
     path: "/",
   });
-  return res.status(200).json({ user: user, message: "login successful" });
+  return res.status(200).json({
+    user: user,
+    company: user.company,
+    roleInfo: user.roleInfo,
+    message: "login successful. if user have company it will be in user!",
+  });
 };
 
 const handleUserLogout = async (req, res) => {
@@ -123,6 +141,31 @@ const handleUserResetPassword = async (req, res) => {
     .json({ message: "Password reset successful.", user: info });
 };
 
+const handleGetOneUser = async (req, res) => {
+  const { userId } = req.params;
+  const user = await User.findById(userId).populate("companyWithRole.company");
+  if (!user) {
+    return res.status(400).json({ message: "invailid user id." });
+  }
+  return res.status(200).json({ user: user, message: "ok!" });
+};
+
+const handleGetUserByCompanyId = async (req, res) => {
+  const { companyId } = req.params;
+  const users = await User.find({
+    companyWithRole: {
+      $elemMatch: {
+        company: companyId,
+        role: { $in: ["employee", "manager"] },
+      },
+    },
+  });
+  if (users.length > 0) {
+    return res.status(200).send({ message: "done!", users: users });
+  }
+  return res.status(400).send({ message: "invalid company id!" });
+};
+
 export {
   handleUserSignUp,
   handleUserSignIn,
@@ -131,6 +174,8 @@ export {
   handleUserSendVerifyEmail,
   handleUserSendResetEmail,
   handleUserResetPassword,
+  handleGetOneUser,
+  handleGetUserByCompanyId,
 };
 
 const isRightUser = async function (email, password) {

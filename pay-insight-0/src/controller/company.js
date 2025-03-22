@@ -1,5 +1,6 @@
 import Company from "../model/company.js";
 import User from "../model/user.js";
+import { setUser } from "../util/jwt.js";
 
 const handleFetchCompanies = async (req, res) => {
   const { userId } = req.params;
@@ -19,16 +20,31 @@ const handleCreateCompany = async (req, res) => {
   const company = new Company({
     companyName: obj.companyName,
     companyAddress: obj.companyAddress,
+    companyPhone: obj.companyPhone,
+    companyEmail: obj.companyEmail,
+    companyWebsite: obj.companyWebsite,
+    companyLogo: obj.companyLogo,
+    companyType: obj.companyType,
     gstNo: obj.gstNo,
     cinNo: obj.cinNo,
   });
   // company.createdBy = user;
-  user.roleInfo.push({ role: "admin", company: company });
+  user.companyWithRole.push({ role: "admin", company: company._id });
   await company.save();
   await user.save();
-  return res
-    .status(200)
-    .send({ message: "company created.", company: company, user: user });
+  user.company = company;
+  user.roleInfo = user.companyWithRole.pop();
+  const token = setUser(user);
+  res.cookie("_session_token", token, {
+    expires: Date.now() + 7 * 24 * 60 * 60 * 1000,
+    maxAge: 7 * 24 * 60 * 60 * 1000,
+    httpOnly: true,
+  });
+  return res.status(200).send({
+    message: "company created.",
+    company: company,
+    roleInfo: user.roleInfo,
+  });
 };
 
 const handleGetCompanyById = async (req, res) => {

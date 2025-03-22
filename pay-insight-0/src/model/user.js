@@ -31,7 +31,7 @@ const userSchema = new Schema(
       type: String,
       required: true,
     },
-    roleInfo: {
+    companyWithRole: {
       type: [
         {
           role: {
@@ -40,7 +40,10 @@ const userSchema = new Schema(
           company: {
             type: Schema.Types.ObjectId,
             ref: "Company",
-            unique: true,
+          },
+          branch: {
+            type: Schema.Types.ObjectId,
+            ref: "Branch",
           },
         },
       ],

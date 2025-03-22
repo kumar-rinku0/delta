@@ -8,6 +8,14 @@ const shiftShema = new Schema({
       message: "invailid shift!",
     },
   },
+  workDays: {
+    type: String,
+    default: "Mon-Sat",
+    enum: {
+      values: ["Mon-Fri", "Mon-Sat"],
+      message: "invalid work days input!",
+    },
+  },
   shiftStartTime: {
     type: String,
     required: true,

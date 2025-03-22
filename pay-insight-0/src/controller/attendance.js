@@ -1,28 +1,66 @@
-import Attendance from "../model/attendance.js";
+import { PunchIn, PunchOut, Attendance } from "../model/attendance.js";
 
-const handleAddAttendance = async (req, res) => {
-    const { employeeId, date, status, checkInGeometry, checkInTime, checkOutGeometry, checkOutTime } = req.body;
+const handlemarkPunchIn = async (req, res) => {
+  const { userId, companyId, branchId, date, status, punchInGeometry } =
+    req.body;
 
-    if (!employeeId || !date || !status || !checkInGeometry || !checkInTime || !checkOutGeometry || !checkOutTime) {
-        return res.status(400).json({ message: "All fields are required." });
-    }
+  const punchIn = new PunchIn({
+    status,
+    punchInGeometry,
+  });
+  await punchIn.save();
+  const prevAttendance = await Attendance.findOne({
+    $and: [
+      { date: date, companyId: companyId, userId: userId, branchId: branchId },
+    ],
+  });
+  if (prevAttendance) {
+    prevAttendance.punchInInfo.push(punchIn);
+    await prevAttendance.save();
 
-    try {
-        const newAttendance = new Attendance({
-            employeeId,
-            date,
-            status,
-            checkInGeometry,
-            checkInTime,
-            checkOutGeometry,
-            checkOutTime,
-        });
+    return res.status(201).json({ message: "punched in!", punchIn: punchIn });
+  }
+  const attendance = new Attendance({
+    userId,
+    companyId,
+    branchId,
+    date,
+  });
+  attendance.punchInInfo.push(punchIn);
+  await attendance.save();
 
-        await newAttendance.save();
-        res.status(201).json({ message: "Attendance added successfully!", attendance: newAttendance });
-    } catch (err) {
-        res.status(500).json({ message: "Error adding attendance", error: err });
-    }
+  return res.status(201).json({ message: "punched in!", punchIn: punchIn });
 };
 
-export { handleAddAttendance }
+const handlemarkPunchOut = async (req, res) => {
+  const { userId, companyId, branchId, date, status, punchOutGeometry } =
+    req.body;
+
+  const punchOut = new PunchOut({
+    status,
+    punchOutGeometry,
+  });
+  await punchOut.save();
+
+  const attendance = await Attendance.findOne({
+    $and: [
+      { date: date, companyId: companyId, userId: userId, branchId: branchId },
+    ],
+  });
+  attendance.punchOutInfo.push(punchOut);
+  await attendance.save();
+
+  res.status(201).json({ message: "punched out!", attendance: attendance });
+};
+
+// Get All Attendance Records
+const handlegetAllAttendance = async (req, res) => {
+  try {
+    const records = await Attendance.find();
+    res.status(200).json(records);
+  } catch (error) {
+    res.status(500).json({ message: "Error fetching records", error: error });
+  }
+};
+
+export { handlemarkPunchIn, handlemarkPunchOut, handlegetAllAttendance };

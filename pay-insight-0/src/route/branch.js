@@ -14,7 +14,7 @@ route.route("/").get((req, res) => {
 
 route.route("/create").post(wrapAsync(handleCreateBranch));
 route
-  .route("/user/:userId/company/:companyId")
+  .route("/userId/:userId/companyId/:companyId")
   .get(wrapAsync(handleCompanyAndBranchInfo));
 route.route("/:companyId").get(wrapAsync(handleFetchBranches));
 

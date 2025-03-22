@@ -2,7 +2,7 @@ import { Schema, model } from "mongoose";
 
 const companySchema = new Schema(
   {
-    companyName: {
+    name: {
       type: String,
       required: true,
       trim: true,
@@ -14,15 +14,30 @@ const companySchema = new Schema(
       unique: true,
       default: () => generateRandomString(5),
     },
-    cinNo: String,
-    gstNo: String,
-    companyAddress: {
+    cin: String,
+    gst: String,
+    logo: String,
+    phone: {
       type: String,
       required: true,
     },
-    createdBy: {
-      type: Schema.Types.ObjectId,
-      ref: "User",
+    email: {
+      type: String,
+      required: true,
+      unique: true,
+    },
+    website: String,
+    type: {
+      type: String,
+      enum: ["Private", "Public"],
+      default: "Private",
+    },
+    branches: {
+      type: Number,
+      required: true,
+      min: 1,
+      max: 10,
+      default: 1,
     },
   },
   { timestamps: true }

@@ -2,19 +2,19 @@ import { Schema, model } from "mongoose";
 
 const branchSchema = new Schema(
   {
-    branchName: {
+    name: {
       type: String,
       required: true,
     },
-    branchAddress: {
+    address: {
       type: String,
       required: true,
     },
-    attendanceRadius: {
+    radius: {
       type: Number,
       required: true,
     },
-    branchGeometry: {
+    geometry: {
       type: {
         type: String,
         enum: ["Point"],
@@ -28,14 +28,18 @@ const branchSchema = new Schema(
     company: {
       type: Schema.Types.ObjectId,
       ref: "Company",
+      required: true,
     },
     createdBy: {
       type: Schema.Types.ObjectId,
       ref: "User",
+      required: true,
     },
   },
   { timestamps: true }
 );
+
+branchSchema.index({ branchGeometry: "2dsphere" });
 
 const Branch = model("Branch", branchSchema);
 

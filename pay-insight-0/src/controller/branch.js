@@ -9,7 +9,7 @@ const handleFetchBranches = async (req, res) => {
   if (!comp) {
     return res.status(400).send({ message: "WRONG COMPANY ID!" });
   }
-  const branches = await Branch.find({ company: companyId });
+  const branches = await Branch.find({ companyId: companyId });
   if (branches.length < 0) {
     return res.status(400).send({ message: "NO BRANCHES FOUND!" });
   }
@@ -28,18 +28,26 @@ const handleCompanyAndBranchInfo = async (req, res) => {
   if (!comp) {
     return res.status(400).send({ message: "WRONG COMPANY ID!" });
   }
-  const branches = await Branch.find({ company: companyId });
+  const branches = await Branch.find({ companyId: companyId });
   comp.branch = branches;
   user.company = comp;
+  const desiredComp = user.companyWithRole.filter((item) => {
+    return item.company.toString() === companyId;
+  });
+  user.roleInfo = desiredComp[0];
   const token = setUser(user);
-  res.cookie("_session_token", token, {
+  res.cookie("JWT_TOKEN", token, {
     expires: Date.now() + 7 * 24 * 60 * 60 * 1000,
     maxAge: 7 * 24 * 60 * 60 * 1000,
     httpOnly: true,
   });
-  return res
-    .status(200)
-    .send({ message: "ok!", user: user, branches: branches, company: comp });
+  return res.status(200).send({
+    message: "ok!",
+    user: user,
+    branches: branches,
+    company: comp,
+    roleInfo: desiredComp[0],
+  });
 };
 
 const handleCreateBranch = async (req, res) => {
@@ -59,7 +67,7 @@ const handleCreateBranch = async (req, res) => {
     branchGeometry: obj.branchGeometry,
   });
   branch.createdBy = user;
-  branch.company = comp;
+  branch.companyId = comp;
   await branch.save();
   return res.status(200).send({ message: "branch created.", branch: branch });
 };
