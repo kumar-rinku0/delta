@@ -30,7 +30,11 @@ const handleUserSignUp = async (req, res) => {
   } catch (error) {
     return res.status(500).send({ message: "server error.", user: user });
   }
-  createMailSystem({ address: user.email, type: "verify", _id: user._id });
+  await createMailSystem({
+    address: user.email,
+    type: "verify",
+    _id: user._id,
+  });
   return res.status(200).send({ message: "user created.", user: user });
 };
 
@@ -101,7 +105,11 @@ const handleUserSendVerifyEmail = async (req, res) => {
   if (!user) {
     return res.status(400).json({ message: "user not found." });
   }
-  createMailSystem({ address: user.email, type: "verify", _id: user._id });
+  await createMailSystem({
+    address: user.email,
+    type: "verify",
+    _id: user._id,
+  });
   return res.status(200).json({ message: "verify email sent." });
 };
 
@@ -112,7 +120,7 @@ const handleUserSendResetEmail = async (req, res) => {
   if (!user) {
     return res.status(400).json({ message: "user not found." });
   }
-  createMailSystem({ address: email, type: "reset", _id: user._id });
+  await createMailSystem({ address: email, type: "reset", _id: user._id });
   return res.status(200).json({ message: "reset email sent." });
 };
 
