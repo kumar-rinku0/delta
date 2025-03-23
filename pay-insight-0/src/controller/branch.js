@@ -61,13 +61,20 @@ const handleCreateBranch = async (req, res) => {
     return res.status(400).send({ message: "company not found!" });
   }
   const branch = new Branch({
-    branchName: obj.branchName,
-    attendanceRadius: obj.attendanceRadius,
-    branchAddress: obj.branchAddress,
-    branchGeometry: obj.branchGeometry,
+    name: obj.name,
+    radius: obj.radius,
+    address: obj.address,
   });
-  branch.createdBy = user;
-  branch.companyId = comp;
+  if (obj.isCoordinates) {
+    branch.geometry = obj.geometry;
+  } else {
+    branch.geometry = {
+      type: "Point",
+      coordinates: [0, 0],
+    };
+  }
+  (branch.geometry = obj.geometry), (branch.createdBy = user);
+  branch.company = comp;
   await branch.save();
   return res.status(200).send({ message: "branch created.", branch: branch });
 };
