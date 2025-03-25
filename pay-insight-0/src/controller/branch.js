@@ -68,14 +68,25 @@ const handleCreateBranch = async (req, res) => {
   if (obj.isCoordinates) {
     branch.geometry = obj.geometry;
   } else {
-    branch.geometry = {
+    obj.geometry = {
       type: "Point",
       coordinates: [0, 0],
     };
   }
-  (branch.geometry = obj.geometry), (branch.createdBy = user);
+  branch.geometry = obj.geometry;
+  branch.createdBy = user;
   branch.company = comp;
   await branch.save();
+  // const userBranch = await User.findById(user._id);
+  // if (!userBranch) {
+  //   return res.status(400).send({ message: "user not found!" });
+  // }
+  // userBranch.companyWithRole.map((item) => {
+  //   if (item.company.toString() === obj.company) {
+  //     item.branch = branch._id;
+  //   }
+  // });
+  // await userBranch.save();
   return res.status(200).send({ message: "branch created.", branch: branch });
 };
 
