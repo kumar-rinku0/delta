@@ -17,17 +17,7 @@ const handleCreateCompany = async (req, res) => {
   if (!user) {
     return res.status(400).send({ message: "login first!" });
   }
-  const company = new Company({
-    companyName: obj.companyName,
-    companyAddress: obj.companyAddress,
-    companyPhone: obj.companyPhone,
-    companyEmail: obj.companyEmail,
-    companyWebsite: obj.companyWebsite,
-    companyLogo: obj.companyLogo,
-    companyType: obj.companyType,
-    gstNo: obj.gstNo,
-    cinNo: obj.cinNo,
-  });
+  const company = new Company(obj);
   // company.createdBy = user;
   user.companyWithRole.push({ role: "admin", company: company._id });
   await company.save();

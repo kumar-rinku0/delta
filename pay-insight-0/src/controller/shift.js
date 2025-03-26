@@ -18,3 +18,22 @@ export const getShiftByEmployeeId = async (req, res) => {
   }
   return res.status(200).json({ shift: shift });
 };
+
+export const handleCreateShifts = async (req, res) => {
+  const { type, endTime, startTime, weekOffs, userId } = req.body;
+  const previous = await Shift.findOne({ createdFor: userId });
+  if (previous) {
+    return res
+      .status(201)
+      .send({ message: "already have one.", shift: previous });
+  }
+  const shift = new Shift({
+    type,
+    endTime,
+    startTime,
+    weekOffs,
+    createdFor: userId,
+  });
+  await shift.save();
+  return res.status(201).send({ message: "created.", shift: shift });
+};

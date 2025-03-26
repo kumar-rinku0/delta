@@ -12,6 +12,7 @@ import userRouter from "./route/user.js";
 import companyRouter from "./route/company.js";
 import branchRouter from "./route/branch.js";
 import attendanceRouter from "./route/attendance.js";
+import shiftRouter from "./route/shift.js";
 import contectRouter from "./route/contact.js";
 
 //middlewares
@@ -42,6 +43,7 @@ app.use("/api/user", userRouter);
 app.use("/api/company", onlyLoggedInUser, companyRouter);
 app.use("/api/branch", branchRouter);
 app.use("/api/attendance", attendanceRouter);
+app.use("/api/shift", shiftRouter);
 app.use("/api/contact", contectRouter);
 
 app.use((err, req, res, next) => {

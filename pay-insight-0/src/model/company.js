@@ -29,8 +29,8 @@ const companySchema = new Schema(
     website: String,
     type: {
       type: String,
-      enum: ["Private", "Public"],
-      default: "Private",
+      enum: ["private", "public"],
+      default: "private",
     },
     branches: {
       type: Number,

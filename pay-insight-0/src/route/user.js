@@ -10,6 +10,7 @@ import {
   handleUserResetPassword,
   handleGetOneUser,
   handleGetUserByCompanyId,
+  handleUserSignUpWithRoles,
 } from "../controller/user.js";
 
 const route = Router();
@@ -27,6 +28,8 @@ route.route("/reset").put(wrapAsync(handleUserResetPassword));
 route.route("/login").post(wrapAsync(handleUserSignIn));
 route.route("/register").post(wrapAsync(handleUserSignUp));
 route.route("/logout").get(wrapAsync(handleUserLogout));
+
+route.route("/registerbyrole").post(wrapAsync(handleUserSignUpWithRoles));
 
 route.route("/userId/:userId").get(wrapAsync(handleGetOneUser));
 route.route("/companyId/:companyId").get(wrapAsync(handleGetUserByCompanyId));

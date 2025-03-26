@@ -16,6 +16,6 @@ route.route("/create").post(wrapAsync(handleCreateBranch));
 route
   .route("/userId/:userId/companyId/:companyId")
   .get(wrapAsync(handleCompanyAndBranchInfo));
-route.route("/:companyId").get(wrapAsync(handleFetchBranches));
+route.route("/companyId/:companyId").get(wrapAsync(handleFetchBranches));
 
 export default route;

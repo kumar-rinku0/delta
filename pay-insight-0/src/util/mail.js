@@ -15,8 +15,6 @@ const transporter = nodemailer.createTransport({
   secure: false, // use SSL
   port: 465, // use the appropriate port
   timeout: 60000, // 60s
-  debug: true, // include SMTP traffic in the logs
-  logger: true, // log information in console
   tls: {
     rejectUnauthorized: false,
   },
@@ -38,26 +36,29 @@ async function mail({ address, subject, text, html }) {
 }
 
 export const createMailSystem = async ({ address, type, _id }) => {
-  try {
-    const token = randomUUID();
-    const DOMAIN = process.env.DOMAIN || "http://localhost:3000";
-    const user = await User.findByIdAndUpdate(_id, {
-      [`${type}Token`]: token, // generate a random token
-      [`${type}TokenExpire`]: new Date(Date.now() + 10 * 60 * 1000), // 10 minutes
-    });
+  if (type === "password") {
+    const html = `<h3>your account password: ${_id}</h3>`;
+    const text = `your account password: ${_id}`;
+    const subject = "Pay insight account password";
+    return await mail({ address, subject, text, html });
+  }
 
-    if (type === "verify") {
-      const html = `<a href="${DOMAIN}/verify?TOKEN=${token}">Click here to verify your email</a>`;
-      const text = `${user.username}, please click the link below to verify your email: ${DOMAIN}/verify?TOKEN=${token}`;
-      const subject = "Verify your email";
-      await mail({ address, subject, text, html });
-    } else if (type === "reset") {
-      const html = `<a href="${DOMAIN}/reset?TOKEN=${token}">Click here to reset your password</a>`;
-      const text = `${user.username}, please click the link below to reset your password: ${DOMAIN}/reset?TOKEN=${token}`;
-      const subject = "Reset your password";
-      await mail({ address, subject, text, html });
-    }
-  } catch (error) {
-    console.error("Error in createMailSystem:", error);
+  const token = randomUUID();
+  const DOMAIN = process.env.DOMAIN || "http://localhost:3000";
+  const user = await User.findByIdAndUpdate(_id, {
+    [`${type}Token`]: token, // generate a random token
+    [`${type}TokenExpire`]: new Date(Date.now() + 10 * 60 * 1000), // 10 minutes
+  });
+
+  if (type === "verify") {
+    const html = `<a href="${DOMAIN}/verify?TOKEN=${token}">Click here to verify your email</a>`;
+    const text = `${user.username}, please click the link below to verify your email: ${DOMAIN}/verify?TOKEN=${token}`;
+    const subject = "Verify your email";
+    await mail({ address, subject, text, html });
+  } else if (type === "reset") {
+    const html = `<a href="${DOMAIN}/reset?TOKEN=${token}">Click here to reset your password</a>`;
+    const text = `${user.username}, please click the link below to reset your password: ${DOMAIN}/reset?TOKEN=${token}`;
+    const subject = "Reset your password";
+    await mail({ address, subject, text, html });
   }
 };

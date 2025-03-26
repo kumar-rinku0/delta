@@ -4,38 +4,76 @@ import Shift from "../model/shift.js";
 import { setUser } from "../util/jwt.js";
 import bcrypt from "bcryptjs";
 import { createMailSystem } from "../util/mail.js";
+import { generateRandomString, isRightUser } from "../util/functions.js";
 
 // login, logout & create user
 const handleUserSignUp = async (req, res) => {
-  const obj = req.body;
-  console.log(obj);
-  const userbyemail = await User.findOne({ email: obj.email });
+  const { givenName, familyName, email, password } = req.body;
+  const userbyemail = await User.findOne({ email });
   if (userbyemail) {
     return res
       .status(500)
       .send({ message: "user already exist.", user: userbyemail });
   }
-  const user = new User(obj);
-  try {
-    await user.save();
-    // if (obj?.role !== "admin") {
-    //   const shift = new Shift({
-    //     type: obj.type,
-    //     startTime: obj.startTime,
-    //     endTime: obj.endTime,
-    //     createdFor: user,
-    //   });
-    //   await shift.save();
-    // }
-  } catch (error) {
-    return res.status(500).send({ message: "server error.", user: user });
-  }
+  const user = new User({
+    givenName,
+    familyName,
+    email,
+    password,
+  });
+  await user.save();
   await createMailSystem({
     address: user.email,
     type: "verify",
     _id: user._id,
   });
   return res.status(200).send({ message: "user created.", user: user });
+};
+
+const handleUserSignUpWithRoles = async (req, res) => {
+  const { familyName, givenName, email, role, companyId, branchId } = req.body;
+  const userbyemail = await User.findOne({ email });
+  if (userbyemail) {
+    const info = userbyemail.companyWithRole.filter((item) => {
+      return item.company === companyId && item.branch === branchId;
+    });
+    if (!info[0]) {
+      userbyemail.companyWithRole.push({
+        role,
+        company: companyId,
+        branch: branchId,
+      });
+    } else {
+      const obj = info[0];
+      obj.role = role;
+      userbyemail.companyWithRole.push(obj);
+    }
+    await userbyemail.save();
+    return res
+      .status(200)
+      .send({ message: "user role updated!", user: userbyemail });
+  }
+  const password = generateRandomString(8, true);
+  const user = new User({
+    givenName,
+    familyName,
+    email,
+    password,
+  });
+  console.log(password);
+  user.companyWithRole.push({ role, company: companyId, branch: branchId });
+  await user.save();
+  await createMailSystem({
+    address: user.email,
+    type: "password",
+    _id: password,
+  });
+  await createMailSystem({
+    address: user.email,
+    type: "verify",
+    _id: user._id,
+  });
+  return res.status(200).json({ message: "ok", user: user });
 };
 
 const handleUserSignIn = async (req, res) => {
@@ -52,7 +90,9 @@ const handleUserSignIn = async (req, res) => {
   if (user.companyWithRole.length !== 0) {
     const company = await Company.findById(user.companyWithRole[0].company);
     if (!company) {
-      return res.status(400).json({ message: "company not found." });
+      return res
+        .status(400)
+        .json({ message: "company not found.", user: user });
     }
     user.company = company;
     user.roleInfo = user.companyWithRole[0];
@@ -184,24 +224,7 @@ export {
   handleUserResetPassword,
   handleGetOneUser,
   handleGetUserByCompanyId,
-};
-
-const isRightUser = async function (email, password) {
-  const user = await User.findOne({ email: email.trim() });
-  if (!user) {
-    return { message: "wrong email address.", status: 400 };
-  }
-  const isOk = await bcrypt.compare(password.trim(), user.password);
-  if (!isOk) {
-    return { message: "wrong password.", status: 401 };
-  }
-  if (!user.isVerified) {
-    return { message: "please verify your email.", status: 406 };
-  }
-  // if (user.role !== "admin" && user.status !== "active") {
-  //   return { message: "blocked by admin!!", status: 403 };
-  // }
-  return user;
+  handleUserSignUpWithRoles,
 };
 
 // const isRightUser = async function (email, password) {

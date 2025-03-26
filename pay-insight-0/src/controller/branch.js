@@ -9,8 +9,8 @@ const handleFetchBranches = async (req, res) => {
   if (!comp) {
     return res.status(400).send({ message: "WRONG COMPANY ID!" });
   }
-  const branches = await Branch.find({ companyId: companyId });
-  if (branches.length < 0) {
+  const branches = await Branch.find({ company: companyId });
+  if (branches.length <= 0) {
     return res.status(400).send({ message: "NO BRANCHES FOUND!" });
   }
   return res

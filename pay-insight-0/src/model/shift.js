@@ -9,13 +9,10 @@ const shiftShema = new Schema({
       message: "invailid shift!",
     },
   },
-  workDays: {
-    type: Number,
-    default: 5,
-    enum: {
-      values: [4, 5, 6, 7],
-      message: "invalid work days input!",
-    },
+  weekOffs: {
+    type: [String],
+    default: ["sat", "sun"],
+    required: true,
   },
   startTime: {
     type: String,
