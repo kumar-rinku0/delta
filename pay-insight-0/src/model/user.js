@@ -31,7 +31,7 @@ const userSchema = new Schema(
       type: String,
       required: true,
     },
-    companyWithRole: {
+    roleInfo: {
       type: [
         {
           role: {
@@ -75,9 +75,9 @@ const userSchema = new Schema(
 );
 
 userSchema.pre("save", async function (next) {
-  if (this.companyWithRole && Array.isArray(this.companyWithRole)) {
+  if (this.roleInfo && Array.isArray(this.roleInfo)) {
     const values = new Set();
-    for (const roleObj of this.companyWithRole) {
+    for (const roleObj of this.roleInfo) {
       // If company is missing, handle it based on your requirement.
       if (!roleObj.company) {
         return next(

@@ -12,9 +12,14 @@ const setUser = (user) => {
       picture: user.picture,
       email: user.email,
       role: user.role,
-      company: user.company,
+      company: {
+        _id: user.company?._id,
+        name: user.company?.name,
+        role: user.company?.role,
+        branch: user.company?.branch,
+        code: user.company?.code,
+      },
       status: user.status,
-      roleInfo: user.roleInfo,
     },
     KEY,
     {

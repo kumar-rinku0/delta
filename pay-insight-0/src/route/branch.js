@@ -3,7 +3,6 @@ import wrapAsync from "../util/wrap-async.js";
 import {
   handleCreateBranch,
   handleFetchBranches,
-  handleCompanyAndBranchInfo,
 } from "../controller/branch.js";
 import { onlyAdminUser } from "../middleware/auth.js";
 
@@ -15,10 +14,6 @@ route.route("/").get((req, res) => {
 
 route.route("/create").post(onlyAdminUser, wrapAsync(handleCreateBranch));
 
-route
-  .route("/userId/:userId/companyId/:companyId")
-  .get(wrapAsync(handleCompanyAndBranchInfo));
-
-route.route("/companyId/:companyId").get(wrapAsync(handleFetchBranches));
+route.route("/company").get(onlyAdminUser, wrapAsync(handleFetchBranches));
 
 export default route;

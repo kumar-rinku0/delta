@@ -13,19 +13,21 @@ const handleFetchCompanies = async (req, res) => {
 
 const handleCreateCompany = async (req, res) => {
   const obj = req.body;
-  const user = await User.findById(obj._id);
-  if (!user) {
-    return res.status(400).send({ error: "login first!" });
-  }
+  const user = await User.findById(req.user._id);
   const company = new Company(obj);
-  // company.createdBy = user;
-  user.companyWithRole.push({ role: "admin", company: company._id });
+  user.roleInfo.push({ role: "admin", company: company._id });
   await company.save();
   await user.save();
-  user.company = company;
-  user.roleInfo = user.companyWithRole.pop();
+
+  const roleInfo = user.roleInfo.pop();
+  user.company = {
+    _id: company._id,
+    name: company.name,
+    role: roleInfo.role,
+    branch: roleInfo.branch,
+  };
   const token = setUser(user);
-  res.cookie("_session_token", token, {
+  res.cookie("JWT_TOKEN", token, {
     expires: Date.now() + 7 * 24 * 60 * 60 * 1000,
     maxAge: 7 * 24 * 60 * 60 * 1000,
     httpOnly: true,
@@ -33,7 +35,37 @@ const handleCreateCompany = async (req, res) => {
   return res.status(200).send({
     message: "company created.",
     company: company,
-    roleInfo: user.roleInfo,
+  });
+};
+
+const handleSelectCompany = async (req, res) => {
+  const { _id } = req.user;
+  const { companyId } = req.query;
+  const user = await User.findById(_id);
+  const comp = await Company.findById(companyId);
+  if (!comp) {
+    return res.status(400).send({ error: "company not found!" });
+  }
+  const desiredComp = user.roleInfo.filter((item) => {
+    return item.company.toString() === companyId.toString();
+  });
+  const roleInfo = desiredComp[0];
+  user.company = {
+    _id: comp._id,
+    name: comp.name,
+    role: roleInfo.role,
+    branch: roleInfo.branch,
+  };
+  const token = setUser(user);
+  res.cookie("JWT_TOKEN", token, {
+    expires: Date.now() + 7 * 24 * 60 * 60 * 1000,
+    maxAge: 7 * 24 * 60 * 60 * 1000,
+    httpOnly: true,
+  });
+  return res.status(200).send({
+    message: "ok!",
+    user: user,
+    company: user.company,
   });
 };
 
@@ -43,4 +75,9 @@ const handleGetCompanyById = async (req, res) => {
   return res.status(200).send({ message: "your company.", company: comp });
 };
 
-export { handleCreateCompany, handleFetchCompanies, handleGetCompanyById };
+export {
+  handleCreateCompany,
+  handleFetchCompanies,
+  handleGetCompanyById,
+  handleSelectCompany,
+};

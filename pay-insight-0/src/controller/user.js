@@ -31,22 +31,28 @@ const handleUserSignUp = async (req, res) => {
 };
 
 const handleUserSignUpWithRoles = async (req, res) => {
-  const { familyName, givenName, email, role, companyId, branchId } = req.body;
+  const { familyName, givenName, email, role } = req.body;
+  const { _id, branch, role: companyRole } = req.user.company;
+  if (companyRole === "manager" && role === "admin") {
+    return res
+      .status(401)
+      .send({ error: "you are not allowed to create admin!" });
+  }
   const userbyemail = await User.findOne({ email });
   if (userbyemail) {
-    const info = userbyemail.companyWithRole.filter((item) => {
-      return item.company === companyId && item.branch === branchId;
+    const info = userbyemail.roleInfo.filter((item) => {
+      return item.company === _id && item.branch === branch;
     });
     if (!info[0]) {
-      userbyemail.companyWithRole.push({
+      userbyemail.roleInfo.push({
         role,
-        company: companyId,
-        branch: branchId,
+        company: _id,
+        branch,
       });
     } else {
       const obj = info[0];
       obj.role = role;
-      userbyemail.companyWithRole.push(obj);
+      userbyemail.roleInfo.push(obj);
     }
     await userbyemail.save();
     return res
@@ -61,7 +67,7 @@ const handleUserSignUpWithRoles = async (req, res) => {
     password,
   });
   console.log(password);
-  user.companyWithRole.push({ role, company: companyId, branch: branchId });
+  user.roleInfo.push({ role, company: _id, branch });
   await user.save();
   await createMailSystemForEmployee({
     address: user.email,
@@ -78,15 +84,17 @@ const handleUserSignIn = async (req, res) => {
     return res.status(401).json({ error: user.message, status: user.status });
   }
 
-  if (user.companyWithRole.length !== 0) {
-    const company = await Company.findById(user.companyWithRole[0].company);
-    if (!company) {
-      return res
-        .status(400)
-        .json({ message: "company not found.", user: user });
+  if (user.roleInfo.length !== 0) {
+    const company = await Company.findById(user.roleInfo[0].company);
+    if (company) {
+      const roleInfo = user.roleInfo[0];
+      user.company = {
+        _id: company._id,
+        name: company.name,
+        role: roleInfo.role,
+        branch: roleInfo.branch,
+      };
     }
-    user.company = company;
-    user.roleInfo = user.companyWithRole[0];
   }
   const token = setUser(user);
   res.cookie("JWT_TOKEN", token, {
@@ -98,7 +106,6 @@ const handleUserSignIn = async (req, res) => {
   return res.status(200).json({
     user: user,
     company: user.company,
-    roleInfo: user.roleInfo,
     message: "login successful. if user have company it will be in user!",
   });
 };
@@ -182,7 +189,7 @@ const handleUserResetPassword = async (req, res) => {
 
 const handleGetOneUser = async (req, res) => {
   const { userId } = req.params;
-  const user = await User.findById(userId).populate("companyWithRole.company");
+  const user = await User.findById(userId).populate("roleInfo.company");
   if (!user) {
     return res.status(400).json({ error: "invailid user id." });
   }
@@ -192,7 +199,7 @@ const handleGetOneUser = async (req, res) => {
 const handleGetUserByCompanyId = async (req, res) => {
   const { companyId } = req.params;
   const users = await User.find({
-    companyWithRole: {
+    roleInfo: {
       $elemMatch: {
         company: companyId,
         role: { $in: ["employee", "manager"] },
@@ -219,17 +226,3 @@ export {
   handleGetUserByCompanyId,
   handleUserSignUpWithRoles,
 };
-
-// const isRightUser = async function (email, password) {
-//   const user = await User.findOne({ email }).populate(
-//     "companyWithRole.company"
-//   );
-//   if (!user) {
-//     return { message: "wrong email." };
-//   }
-//   const isOk = await bcrypt.compare(password.trim(), user.password);
-//   if (!isOk) {
-//     return { message: "wrong password." };
-//   }
-//   return user;
-// };

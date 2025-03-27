@@ -4,6 +4,7 @@ import {
   handleCreateCompany,
   handleFetchCompanies,
   handleGetCompanyById,
+  handleSelectCompany,
 } from "../controller/company.js";
 
 const route = Router();
@@ -14,6 +15,8 @@ route.route("/").get((req, res) => {
 });
 
 route.route("/create").post(wrapAsync(handleCreateCompany));
+route.route("/select").get(wrapAsync(handleSelectCompany));
+
 route
   .route("/getOneByCompanyId/:companyId")
   .get(wrapAsync(handleGetCompanyById));

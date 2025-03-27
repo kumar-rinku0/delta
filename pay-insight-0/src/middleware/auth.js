@@ -30,11 +30,7 @@ const onlyAdminUser = (req, res, next) => {
   if (!user.company) {
     return res.status(400).send({ type: "error", error: "company not found!" });
   }
-  if (!user.roleInfo) {
-    return res.status(400).send({ type: "error", error: "role not found!" });
-  }
-
-  if (user.roleInfo.role !== "admin") {
+  if (user.company.role !== "admin") {
     return res.status(400).send({ type: "error", error: "not an admin!" });
   }
   return next();
@@ -49,12 +45,9 @@ const onlyAdminOrManagerUser = (req, res, next) => {
   if (!user.company) {
     return res.status(400).send({ type: "error", error: "company not found!" });
   }
-  if (!user.roleInfo) {
-    return res.status(400).send({ type: "error", error: "role not found!" });
-  }
 
   // check if the user is admin or manager
-  if (user.roleInfo.role === "employee") {
+  if (user.company.role === "employee") {
     return res
       .status(400)
       .send({ type: "error", error: "not an admin or manager!" });
