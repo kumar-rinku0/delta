@@ -59,7 +59,7 @@ const handlegetAllAttendance = async (req, res) => {
     const records = await Attendance.find();
     res.status(200).json(records);
   } catch (error) {
-    res.status(500).json({ message: "Error fetching records", error: error });
+    res.status(500).json({ error: "Error fetching records", logs: error });
   }
 };
 

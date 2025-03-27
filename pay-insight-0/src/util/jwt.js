@@ -8,8 +8,8 @@ const setUser = (user) => {
     {
       _id: user._id,
       username: user.username,
-      firstName: user.firstName,
-      lastName: user.lastName,
+      name: `${user.givenName} ${user.familyName}`,
+      picture: user.picture,
       email: user.email,
       role: user.role,
       company: user.company,

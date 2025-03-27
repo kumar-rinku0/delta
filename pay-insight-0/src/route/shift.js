@@ -5,10 +5,14 @@ import {
   getShiftByEmployeeId,
   handleCreateShifts,
 } from "../controller/shift.js";
+import { onlyAdminOrManagerUser } from "../middleware/auth.js";
 
 const router = express.Router();
 
 router.get("/all", wrapAsync(getAllShifts));
 router.get("/:employeeId", wrapAsync(getShiftByEmployeeId));
-router.post("/create", wrapAsync(handleCreateShifts));
+router
+  .route("/create")
+  .post(onlyAdminOrManagerUser, wrapAsync(handleCreateShifts));
+
 export default router;

@@ -41,9 +41,9 @@ app.get("/api", (req, res) => {
 
 app.use("/api/user", userRouter);
 app.use("/api/company", onlyLoggedInUser, companyRouter);
-app.use("/api/branch", branchRouter);
-app.use("/api/attendance", attendanceRouter);
-app.use("/api/shift", shiftRouter);
+app.use("/api/branch", onlyLoggedInUser, branchRouter);
+app.use("/api/attendance", onlyLoggedInUser, attendanceRouter);
+app.use("/api/shift", onlyLoggedInUser, shiftRouter);
 app.use("/api/contact", contectRouter);
 
 app.use((err, req, res, next) => {

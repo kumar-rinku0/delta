@@ -3,9 +3,9 @@ import Shift from "../model/shift.js";
 export const getAllShifts = async (req, res) => {
   const shifts = await Shift.find();
   if (shifts.length === 0) {
-    return res.status(404).json({ message: "No shifts found!" });
+    return res.status(404).json({ error: "No shifts found!" });
   }
-  return res.status(200).json(shifts);
+  return res.status(200).json({ shifts: shifts });
 };
 
 export const getShiftByEmployeeId = async (req, res) => {
@@ -14,7 +14,7 @@ export const getShiftByEmployeeId = async (req, res) => {
   if (!shift) {
     return res
       .status(404)
-      .json({ message: `No shift found for employeeId: ${employeeId}` });
+      .json({ error: `No shift found for employeeId: ${employeeId}` });
   }
   return res.status(200).json({ shift: shift });
 };
@@ -25,7 +25,7 @@ export const handleCreateShifts = async (req, res) => {
   if (previous) {
     return res
       .status(201)
-      .send({ message: "already have one.", shift: previous });
+      .send({ message: "already assigned a shift.", shift: previous });
   }
   const shift = new Shift({
     type,
@@ -35,5 +35,5 @@ export const handleCreateShifts = async (req, res) => {
     createdFor: userId,
   });
   await shift.save();
-  return res.status(201).send({ message: "created.", shift: shift });
+  return res.status(201).send({ message: "shift created.", shift: shift });
 };

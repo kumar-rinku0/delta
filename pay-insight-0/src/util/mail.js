@@ -62,3 +62,38 @@ export const createMailSystem = async ({ address, type, _id }) => {
     await mail({ address, subject, text, html });
   }
 };
+
+export const createMailSystemForEmployee = async ({
+  address,
+  _id,
+  password,
+}) => {
+  const user = await User.findById(_id); // Get the user details from the database
+  if (!user) {
+    throw new Error("User not found");
+  }
+
+  const DOMAIN = process.env.DOMAIN || "http://localhost:3000";
+  const token = randomUUID(); // Generate token for verification
+
+  // Update the user document with the generated token and expiration time
+  await User.findByIdAndUpdate(_id, {
+    verifyToken: token,
+    verifyTokenExpire: new Date(Date.now() + 10 * 60 * 1000), // Token expires in 10 minutes
+  });
+
+  const html = `
+    <h3>Your account password: ${password}</h3>
+    <p>To verify your email address, please click the link below:</p>
+    <a href="${DOMAIN}/verify?TOKEN=${token}">Click here to verify your email</a>
+  `;
+  const text = `
+    Your account password: ${password}
+    To verify your email address, please click the link below:
+    ${DOMAIN}/verify?TOKEN=${token}
+  `;
+  const subject = "Pay Insight - Password and Verify Link";
+
+  // Send the email
+  await mail({ address, subject, text, html });
+};

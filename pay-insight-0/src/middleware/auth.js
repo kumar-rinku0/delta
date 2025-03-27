@@ -16,9 +16,55 @@ const onlyLoggedInUser = (req, res, next) => {
     req.user = user;
   }
   if (!user) {
-    return res.status(400).send({ type: "error", msg: "login to access!" });
+    return res.status(400).send({ type: "error", error: "login to access!" });
   }
   return next();
 };
 
-export { isLoggedInCheck, onlyLoggedInUser };
+const onlyAdminUser = (req, res, next) => {
+  let user = req.user;
+  if (!user || user == null) {
+    user = getUser(req.cookies?.JWT_TOKEN);
+    req.user = user;
+  }
+  if (!user.company) {
+    return res.status(400).send({ type: "error", error: "company not found!" });
+  }
+  if (!user.roleInfo) {
+    return res.status(400).send({ type: "error", error: "role not found!" });
+  }
+
+  if (user.roleInfo.role !== "admin") {
+    return res.status(400).send({ type: "error", error: "not an admin!" });
+  }
+  return next();
+};
+
+const onlyAdminOrManagerUser = (req, res, next) => {
+  let user = req.user;
+  if (!user || user == null) {
+    user = getUser(req.cookies?.JWT_TOKEN);
+    req.user = user;
+  }
+  if (!user.company) {
+    return res.status(400).send({ type: "error", error: "company not found!" });
+  }
+  if (!user.roleInfo) {
+    return res.status(400).send({ type: "error", error: "role not found!" });
+  }
+
+  // check if the user is admin or manager
+  if (user.roleInfo.role === "employee") {
+    return res
+      .status(400)
+      .send({ type: "error", error: "not an admin or manager!" });
+  }
+  return next();
+};
+
+export {
+  isLoggedInCheck,
+  onlyLoggedInUser,
+  onlyAdminUser,
+  onlyAdminOrManagerUser,
+};

@@ -3,7 +3,7 @@ import User from "../model/user.js";
 import Shift from "../model/shift.js";
 import { setUser } from "../util/jwt.js";
 import bcrypt from "bcryptjs";
-import { createMailSystem } from "../util/mail.js";
+import { createMailSystem, createMailSystemForEmployee } from "../util/mail.js";
 import { generateRandomString, isRightUser } from "../util/functions.js";
 
 // login, logout & create user
@@ -12,8 +12,8 @@ const handleUserSignUp = async (req, res) => {
   const userbyemail = await User.findOne({ email });
   if (userbyemail) {
     return res
-      .status(500)
-      .send({ message: "user already exist.", user: userbyemail });
+      .status(400)
+      .send({ error: "user already exist.", user: userbyemail });
   }
   const user = new User({
     givenName,
@@ -63,15 +63,10 @@ const handleUserSignUpWithRoles = async (req, res) => {
   console.log(password);
   user.companyWithRole.push({ role, company: companyId, branch: branchId });
   await user.save();
-  await createMailSystem({
+  await createMailSystemForEmployee({
     address: user.email,
-    type: "password",
-    _id: password,
-  });
-  await createMailSystem({
-    address: user.email,
-    type: "verify",
     _id: user._id,
+    password,
   });
   return res.status(200).json({ message: "ok", user: user });
 };
@@ -80,13 +75,9 @@ const handleUserSignIn = async (req, res) => {
   const { email, password } = req.body;
   const user = await isRightUser(email, password);
   if (user?.message) {
-    return res.status(401).json({ message: user.message, status: user.status });
+    return res.status(401).json({ error: user.message, status: user.status });
   }
-  // if (user.companyWithRole.length === 0) {
-  //   return res
-  //     .status(200)
-  //     .json({ message: "user not assigned to any company.", user: user });
-  // }
+
   if (user.companyWithRole.length !== 0) {
     const company = await Company.findById(user.companyWithRole[0].company);
     if (!company) {
@@ -135,7 +126,7 @@ const handleUserVerify = async (req, res) => {
       .status(200)
       .json({ message: "User verified.", user: info, status: 200 });
   }
-  return res.status(400).json({ message: "Invalid token.", status: 400 });
+  return res.status(400).json({ error: "Invalid token.", status: 400 });
 };
 
 const handleUserSendVerifyEmail = async (req, res) => {
@@ -158,7 +149,7 @@ const handleUserSendResetEmail = async (req, res) => {
   const { email } = req.body;
   const user = await User.findOne({ email });
   if (!user) {
-    return res.status(400).json({ message: "user not found." });
+    return res.status(400).json({ error: "user not found." });
   }
   await createMailSystem({ address: email, type: "reset", _id: user._id });
   return res.status(200).json({ message: "reset email sent." });
@@ -169,10 +160,10 @@ const handleUserResetPassword = async (req, res) => {
   const { password } = req.body;
   const user = await User.findOne({ resetToken: TOKEN });
   if (!user) {
-    return res.status(400).json({ message: "Invalid token." });
+    return res.status(400).json({ error: "Invalid token." });
   }
   if (user.resetTokenExpire < Date.now()) {
-    return res.status(400).json({ message: "Token expired." });
+    return res.status(400).json({ error: "Token expired." });
   }
   const salt = await bcrypt.genSalt(10);
   const hexcode = await bcrypt.hash(password.trim(), salt);
@@ -193,9 +184,9 @@ const handleGetOneUser = async (req, res) => {
   const { userId } = req.params;
   const user = await User.findById(userId).populate("companyWithRole.company");
   if (!user) {
-    return res.status(400).json({ message: "invailid user id." });
+    return res.status(400).json({ error: "invailid user id." });
   }
-  return res.status(200).json({ user: user, message: "ok!" });
+  return res.status(200).json({ user: user, message: "user populated!" });
 };
 
 const handleGetUserByCompanyId = async (req, res) => {
@@ -209,9 +200,11 @@ const handleGetUserByCompanyId = async (req, res) => {
     },
   });
   if (users.length > 0) {
-    return res.status(200).send({ message: "done!", users: users });
+    return res
+      .status(200)
+      .send({ message: "employee & manager in company!", users: users });
   }
-  return res.status(400).send({ message: "invalid company id!" });
+  return res.status(400).send({ error: "invalid company id!" });
 };
 
 export {
