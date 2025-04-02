@@ -58,10 +58,13 @@ const handleSelectCompany = async (req, res) => {
   };
   const token = setUser(user);
   res.cookie("JWT_TOKEN", token, {
-    expires: Date.now() + 7 * 24 * 60 * 60 * 1000,
-    maxAge: 7 * 24 * 60 * 60 * 1000,
+    maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
     httpOnly: true,
+    path: "/",
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "Strict", // Prevent CSRF
   });
+
   return res.status(200).send({
     message: "ok!",
     user: user,
