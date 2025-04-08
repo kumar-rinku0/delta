@@ -25,6 +25,9 @@ const MONGO_URI = process.env.MONGO_URI;
 
 connectDatabase(MONGO_URI);
 
+// middlewares
+
+app.use(express.static("public"));
 app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -39,6 +42,8 @@ app.get("/api", (req, res) => {
   return res.status(200).send({ user: user });
 });
 
+// routers
+
 app.use("/api/user", userRouter);
 app.use("/api/company", onlyLoggedInUser, companyRouter);
 app.use("/api/branch", onlyLoggedInUser, branchRouter);
@@ -46,6 +51,7 @@ app.use("/api/attendance", onlyLoggedInUser, attendanceRouter);
 app.use("/api/shift", onlyLoggedInUser, shiftRouter);
 app.use("/api/contact", contectRouter);
 
+// error handling middleware
 app.use((err, req, res, next) => {
   console.log(err);
   const { status = 500, message } = err;
